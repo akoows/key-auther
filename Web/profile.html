@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../style.css">
+  <title>Key Auth - Profile</title>
+  <style>
+    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(4px); justify-content: center; align-items: center; z-index: 999; }
+    .modal.active { display: flex; }
+    .modal-content { background: var(--panel); padding: 24px; border-radius: var(--radius); width: 360px; text-align: center; box-shadow: 0 0 25px rgba(0,0,0,0.6); }
+    .modal-content h3 { margin-bottom: 10px; color: var(--accent); }
+    .modal-content p { color: var(--text); }
+    .modal-inputs input { display: block; width: 100%; margin: 8px 0; padding: 10px; border: none; border-radius: var(--radius); background: var(--hover); color: var(--text); font-size: 14px; }
+    .modal-buttons { margin-top: 15px; display: flex; justify-content: space-between; }
+    .modal-buttons button { padding: 10px 20px; border: none; border-radius: var(--radius); cursor: pointer; }
+    .modal-buttons .primary { background: var(--accent); color: #fff; }
+    .modal-buttons .cancel { background: var(--hover); color: var(--text); }
+    .footer button { margin-top: 8px; padding: 6px 10px; border-radius: var(--radius); border: none; background: var(--accent); color: #fff; cursor: pointer; }
+    .user-profile img { cursor: pointer; transition: 0.3s; }
+    .user-profile img:hover { transform: scale(1.05); }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div>
+      <div class="logo">Key Auth</div>
+      <nav class="nav">
+        <a href="./licenses.html"><div class="nav-item">Licenses</div></a>
+        <a href="./documentation.html"><div class="nav-item">Documentation</div></a>
+        <a href="./settings.html"><div class="nav-item">Settings</div></a>
+      </nav>
+    </div>
+    <div class="footer" id="sidebarFooter"></div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+    <section class="content">
+      <h2>Profile</h2>
+      <div class="user-profile" id="userProfile"></div>
+    </section>
+  </main>
+
+  <!-- Modal -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <h3 id="modalTitle"></h3>
+      <p id="modalMessage"></p>
+      <div id="modalInputs" class="modal-inputs"></div>
+      <div class="modal-buttons">
+        <button id="modalCancel" class="cancel">Cancelar</button>
+        <button id="modalConfirm" class="primary">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = "https://keyer.camposcloud.app/api";
+    const sidebarFooter = document.getElementById("sidebarFooter");
+    const userProfileDiv = document.getElementById("userProfile");
+    const modal = document.getElementById("modal");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalMessage = document.getElementById("modalMessage");
+    const modalInputs = document.getElementById("modalInputs");
+    const modalCancel = document.getElementById("modalCancel");
+    const modalConfirm = document.getElementById("modalConfirm");
+
+    const userId = localStorage.getItem("userId");
+    if(!userId){ alert("Usuário não logado!"); window.location.href = "./login.html"; }
+
+    function openModal({ title, message, inputs=[], confirmText="Confirmar", onConfirm }) {
+      modalTitle.textContent = title;
+      modalMessage.innerHTML = message;
+      modalInputs.innerHTML = "";
+      inputs.forEach(i=>{
+        const input = document.createElement("input");
+        input.type = i.type||"text";
+        input.id = i.id;
+        input.placeholder = i.placeholder;
+        if(i.value) input.value = i.value;
+        modalInputs.appendChild(input);
+      });
+      modal.classList.add("active");
+      modalConfirm.textContent = confirmText;
+
+      modalConfirm.onclick = ()=>{
+        const values = {};
+        inputs.forEach(i=>{
+          const el = document.getElementById(i.id);
+          if(i.type==="file") values[i.id] = el.files[0];
+          else values[i.id] = el.value;
+        });
+        onConfirm && onConfirm(values);
+        closeModal();
+      };
+      modalCancel.onclick = closeModal;
+    }
+
+    function closeModal(){
+      modal.classList.remove("active");
+      modalInputs.innerHTML = "";
+      modalConfirm.onclick = null;
+      modalCancel.onclick = null;
+    }
+
+    async function loadUserData(){
+      try{
+        const userRes = await fetch(`${API_URL}/users/${userId}`);
+        if(!userRes.ok) throw new Error("Usuário não encontrado");
+        const user = await userRes.json();
+
+        const [allUsersRes, licensesRes] = await Promise.all([
+          fetch(`${API_URL}/users`),
+          fetch(`${API_URL}/licenses/user/${userId}`)
+        ]);
+        const allUsers = allUsersRes.ok ? await allUsersRes.json() : [];
+        const userLicenses = licensesRes.ok ? await licensesRes.json() : [];
+
+        // Sidebar
+        sidebarFooter.innerHTML = `
+          <img src="${user.avatarUrl}" style="height:40px; border-radius:100%;">
+          <div class="footer-text" style="display:flex; flex-direction:column;">
+            <h3>${user.name}</h3>
+            <button id="logoutBtn">Sair</button>
+          </div>
+        `;
+        document.getElementById("logoutBtn").onclick = ()=>{
+          localStorage.removeItem("userId");
+          window.location.href = "./index.html";
+        };
+
+        // Perfil
+        userProfileDiv.innerHTML = `
+          <img id="avatarImg" src="${user.avatarUrl}" alt="User" style="height:120px; border-radius:100%;">
+          <div class="user-infos" style="display:flex; justify-content:space-between; margin-top:20px;">
+            <div class="left">
+              <h1>${user.name}</h1>
+              <div class="subscription">
+                <p>Criado em: <span>${new Date(user.createdAt).toLocaleDateString('pt-BR')}</span></p>
+              </div>
+            </div>
+            <div class="right" style="display:flex; flex-direction:column; gap:10px;">
+              <button id="editBtn" class="btn primary">Alterar dados</button>
+            </div>
+          </div>
+        `;
+
+        // Trocar avatar
+        document.getElementById("avatarImg").onclick = ()=>{
+          openModal({
+            title: "Alterar avatar",
+            message: "Escolha um novo avatar:",
+            inputs: [{id:"avatarFile", placeholder:"Avatar", type:"file"}],
+            confirmText: "Salvar",
+            onConfirm: async (values)=>{
+              if(!values.avatarFile) return;
+              try{
+                const formData = new FormData();
+                formData.append("avatar", values.avatarFile);
+                const res = await fetch(`${API_URL}/users/${userId}/avatar`, { method:"POST", body: formData });
+                if(!res.ok) throw new Error("Erro ao atualizar avatar");
+                loadUserData();
+              }catch(err){ alert(err.message); }
+            }
+          });
+        };
+
+        // Alterar nome e senha
+        document.getElementById("editBtn").onclick = ()=>{
+          openModal({
+            title: "Alterar dados",
+            message: "Edite seu nome e senha:",
+            inputs: [
+              {id:"name", placeholder:"Nome", value:user.name},
+              {id:"pass", placeholder:"Nova senha", type:"password"}
+            ],
+            confirmText:"Salvar",
+            onConfirm: async (values)=>{
+              try{
+                const payload = {};
+                if(values.name) payload.name = values.name;
+                if(values.pass) payload.pass = values.pass;
+                const res = await fetch(`${API_URL}/users/${userId}`, { method:"PUT", headers:{"Content-Type":"application/json"}, body: JSON.stringify(payload) });
+                if(!res.ok) throw new Error("Erro ao alterar dados");
+                loadUserData();
+              }catch(err){ alert(err.message); }
+            }
+          });
+        };
+      }catch(err){ console.error(err); alert("Erro ao carregar dados do usuário: "+err.message); }
+    }
+
+    loadUserData();
+  </script>
+</body>
+</html>
