@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="style.css">
   <title>Key Auther - Licenses</title>
   <style>
     /* === MODAL === */
@@ -64,14 +64,12 @@
     <div>
       <div class="logo">Key Auth</div>
       <nav class="nav">
-        <a href="./licenses.html"><div class="nav-item active">Licenses</div></a>
-        <a href="./users.html"><div class="nav-item">Users</div></a>
+        <a href="./licenses.html"><div class="nav-item">Licenses</div></a>
         <a href="./documentation.html"><div class="nav-item">Documentation</div></a>
         <a href="./settings.html"><div class="nav-item">Settings</div></a>
       </nav>
     </div>
-    <!-- Sidebar Footer será preenchido dinamicamente -->
-    <div class="footer" id="sidebarUser"></div>
+    <a href="./profile.html"><div class="footer" id="sidebarFooter"></div></a>
   </aside>
 
   <!-- Main -->
@@ -123,7 +121,6 @@
     const createBtn = document.getElementById("createLicenseBtn");
     const deleteBtn = document.getElementById("deleteLicenseBtn");
     const sidebarUserDiv = document.getElementById("sidebarUser");
-
     const modal = document.getElementById("modal");
     const modalTitle = document.getElementById("modalTitle");
     const modalMessage = document.getElementById("modalMessage");
@@ -131,14 +128,13 @@
     const modalCancel = document.getElementById("modalCancel");
     const modalConfirm = document.getElementById("modalConfirm");
 
-    const loggedUserId = localStorage.getItem("userId"); // userId salvo no login
+    const loggedUserId = localStorage.getItem("userId");
 
     if (!loggedUserId) {
       alert("Usuário não logado!");
       window.location.href = "./login.html";
     }
 
-    // === Modal genérico ===
     function openModal({ title, message, inputs = [], confirmText = "Confirmar", onConfirm, forceOnCancel = false }) {
       modalTitle.textContent = title;
       modalMessage.innerHTML = message;
@@ -175,34 +171,39 @@
       modalConfirm.onclick = null;
     }
 
-    // === Carregar informações do usuário na sidebar ===
+    // === Sidebar User ===
     async function loadSidebarUser() {
       try {
         const res = await fetch(`${API_URL}/users/${loggedUserId}`);
         if (!res.ok) throw new Error("Erro ao buscar dados do usuário");
         const user = await res.json();
 
-        sidebarUserDiv.innerHTML = `
-          <a href="profile.html">
-            <div class="footer">
-              <img src="${user.avatarUrl || '../src/images/default.jpg'}" style="height: 40px; border-radius: 100%;">
-              <div class="footer-text" style="display: flex; flex-direction: column;">
-                <h3>${user.name}</h3>
-                <p>${user.plan || "Tester Plan"}</p>
-              </div>
+        const sidebarFooter = document.getElementById("sidebarFooter");
+        sidebarFooter.innerHTML = `
+          <div class="footer">
+            <img src="${user.avatarUrl || '../src/images/default.jpg'}" style="height: 40px; border-radius: 100%;">
+            <div class="footer-text" style="display:flex; flex-direction:column;">
+              <h3>${user.name}</h3>
+              <p>${user.plan}</p>
+              <button id="logoutBtn" class="btn primary">Sair</button>
             </div>
-          </a>
+          </div>
         `;
+
+        document.getElementById("logoutBtn").onclick = () => {
+          localStorage.removeItem("userId");
+          window.location.href = "./index.html";
+        };
       } catch (error) {
         console.error("Erro ao carregar sidebar:", error);
       }
     }
 
-    // === Carregar Licenças do usuário logado ===
+    // === Licenses ===
     async function loadLicenses() {
       try {
         const [licensesRes, usersRes] = await Promise.all([
-          fetch(`${API_URL}/licenses/user/${loggedUserId}`), // apenas do usuário logado
+          fetch(`${API_URL}/licenses/user/${loggedUserId}`),
           fetch(`${API_URL}/users`)
         ]);
 
@@ -210,7 +211,6 @@
 
         const licenses = await licensesRes.json();
         const users = await usersRes.json();
-
         const userMap = {};
         users.forEach(u => userMap[u.id] = u.name || u.username || "Desconhecido");
 
@@ -233,7 +233,6 @@
           `;
           tableBody.appendChild(tr);
         });
-
       } catch (error) {
         console.error("Erro ao carregar licenças:", error);
       }
@@ -250,7 +249,8 @@
         ],
         onConfirm: async (values) => {
           const { type, durationDays } = values;
-          if (!type || !durationDays) return openModal({ title:"Erro", message:"Preencha todos os campos.", confirmText:"Ok" });
+          if (!type || !durationDays)
+            return openModal({ title:"Erro", message:"Preencha todos os campos.", confirmText:"Ok" });
 
           try {
             const res = await fetch(`${API_URL}/licenses`, {
@@ -274,7 +274,8 @@
     // === Deletar Licença ===
     deleteBtn.addEventListener("click", () => {
       const selected = document.querySelector("input[name='selectedLicense']:checked");
-      if (!selected) return openModal({ title:"Aviso", message:"Selecione uma licença.", confirmText:"Ok" });
+      if (!selected)
+        return openModal({ title:"Aviso", message:"Selecione uma licença.", confirmText:"Ok" });
 
       const key = selected.value;
 

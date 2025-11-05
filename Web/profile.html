@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="./style.css">
   <title>Key Auth - Profile</title>
   <style>
     .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(4px); justify-content: center; align-items: center; z-index: 999; }
@@ -67,6 +67,8 @@
     const modalCancel = document.getElementById("modalCancel");
     const modalConfirm = document.getElementById("modalConfirm");
 
+    const loggedUserId = localStorage.getItem("userId"); // userId salvo no login
+
     const userId = localStorage.getItem("userId");
     if(!userId){ alert("Usuário não logado!"); window.location.href = "./login.html"; }
 
@@ -117,19 +119,6 @@
         ]);
         const allUsers = allUsersRes.ok ? await allUsersRes.json() : [];
         const userLicenses = licensesRes.ok ? await licensesRes.json() : [];
-
-        // Sidebar
-        sidebarFooter.innerHTML = `
-          <img src="${user.avatarUrl}" style="height:40px; border-radius:100%;">
-          <div class="footer-text" style="display:flex; flex-direction:column;">
-            <h3>${user.name}</h3>
-            <button id="logoutBtn">Sair</button>
-          </div>
-        `;
-        document.getElementById("logoutBtn").onclick = ()=>{
-          localStorage.removeItem("userId");
-          window.location.href = "./index.html";
-        };
 
         // Perfil
         userProfileDiv.innerHTML = `
@@ -192,7 +181,35 @@
       }catch(err){ console.error(err); alert("Erro ao carregar dados do usuário: "+err.message); }
     }
 
+    async function loadSidebarUser() {
+      try {
+        const res = await fetch(`${API_URL}/users/${loggedUserId}`);
+        if (!res.ok) throw new Error("Erro ao buscar dados do usuário");
+        const user = await res.json();
+
+        const sidebarFooter = document.getElementById("sidebarFooter");
+        sidebarFooter.innerHTML = `
+          <div class="footer">
+            <img src="${user.avatarUrl || '../src/images/default.jpg'}" style="height: 40px; border-radius: 100%;">
+            <div class="footer-text" style="display:flex; flex-direction:column;">
+              <h3>${user.name}</h3>
+              <p>${user.plan || "Tester Plan"}</p>
+              <button id="logoutBtn" class="btn small">Sair</button>
+            </div>
+          </div>
+        `;
+
+        document.getElementById("logoutBtn").onclick = () => {
+          localStorage.removeItem("userId");
+          window.location.href = "./index.html";
+        };
+      } catch (error) {
+        console.error("Erro ao carregar sidebar:", error);
+      }
+    }
+
     loadUserData();
+    loadSidebarUser();
   </script>
 </body>
 </html>

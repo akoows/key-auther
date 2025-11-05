@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="./style.css">
   <title>Key Auth - Login / Registro</title>
   <style>
     body {
@@ -231,7 +231,7 @@
         const user = await res.json();
         localStorage.setItem("userId", user.id);
         openModal("Sucesso", `Bem-vindo, ${user.name}!`, () => {
-          window.location.href = "./pages/licenses.html";
+          window.location.href = "licenses.html";
         });
       } catch (error) {
         openModal("Erro", error.message);
@@ -256,7 +256,7 @@
         const user = await res.json();
         localStorage.setItem("userId", user.id);
         openModal("Sucesso", `Usuário registrado com sucesso, ${user.name}!`, () => {
-          window.location.href = "./pages/licenses.html";
+          window.location.href = "licenses.html";
         });
       } catch (error) {
         openModal("Erro", error.message);
