@@ -1,3 +1,6 @@
+/* ==============================
+   VARIÁVEIS GLOBAIS
+   ============================== */
 :root {
   --bg: #0a0a0a;
   --panel: #111;
@@ -9,7 +12,9 @@
   --transition: 0.2s ease;
 }
 
-/* Reset + fonte */
+/* ==============================
+   RESET E CONFIGURAÇÕES GLOBAIS
+   ============================== */
 * {
   margin: 0;
   padding: 0;
@@ -22,7 +27,7 @@ body {
   background-color: var(--bg);
   color: var(--text);
   display: flex;
-  height: 100vh;
+  min-height: 100vh;
   overflow: hidden;
 }
 
@@ -30,6 +35,10 @@ a {
   text-decoration: none;
   color: inherit;
 }
+
+/* ==============================
+   LAYOUT PRINCIPAL
+   ============================== */
 
 /* === SIDEBAR === */
 .sidebar {
@@ -65,12 +74,7 @@ a {
   border-left: 3px solid transparent;
 }
 
-.nav-item:hover {
-  background: var(--hover);
-  color: var(--accent);
-  border-left: 3px solid var(--accent);
-}
-
+.nav-item:hover,
 .nav-item.active {
   background: var(--hover);
   color: var(--accent);
@@ -114,7 +118,7 @@ a {
   font-size: 0.8rem;
 }
 
-/* === MAIN === */
+/* === MAIN CONTENT === */
 .main {
   flex: 1;
   display: flex;
@@ -122,6 +126,10 @@ a {
   background: var(--bg);
   overflow-y: auto;
 }
+
+/* ==============================
+   COMPONENTES DE INTERFACE
+   ============================== */
 
 /* === TOPBAR === */
 .topbar {
@@ -168,7 +176,7 @@ a {
   border-radius: 50%;
 }
 
-/* === CONTENT === */
+/* === CONTENT AREA === */
 .content {
   flex: 1;
   padding: 40px 50px;
@@ -211,6 +219,10 @@ a {
   transform: translateY(-2px);
 }
 
+/* ==============================
+   COMPONENTES ESPECÍFICOS
+   ============================== */
+
 /* === TABLE === */
 .table-container {
   background: var(--panel);
@@ -232,8 +244,7 @@ thead {
   letter-spacing: 0.5px;
 }
 
-th,
-td {
+th, td {
   padding: 14px 12px;
   text-align: left;
 }
@@ -302,7 +313,7 @@ tbody tr:hover {
 
 .subscription {
   line-height: 1.6;
-  font-size: small
+  font-size: small;
 }
 
 .subscription p {
@@ -315,6 +326,137 @@ tbody tr:hover {
   font-weight: 400;
 }
 
+/* === APLICAÇÕES (CARDS) === */
+.apps-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.app-card {
+  background: var(--panel);
+  border-radius: var(--radius);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  padding: 10px;
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+}
+
+.app-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+}
+
+.app-card img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-radius: var(--radius);
+  margin-bottom: 10px;
+}
+
+.app-card .info h4 {
+  margin: 0;
+  font-size: 16px;
+  color: var(--text);
+}
+
+.app-card .info p {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* === MODAL === */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(4px);
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modal.active {
+  display: flex;
+}
+
+.modal-content {
+  background: var(--panel);
+  padding: 24px;
+  border-radius: var(--radius);
+  width: 380px;
+  text-align: center;
+  box-shadow: 0 0 25px rgba(0,0,0,0.6);
+}
+
+.modal-content h3 {
+  margin-bottom: 20px;
+  color: var(--accent);
+}
+
+.modal-content input {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border: none;
+  border-radius: var(--radius);
+  background: var(--hover);
+  color: var(--text);
+  font-size: 14px;
+}
+
+.modal-buttons {
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.modal-buttons .primary {
+  background: var(--accent);
+  color: #fff;
+}
+
+.modal-buttons .cancel {
+  background: var(--hover);
+  color: var(--text);
+}
+
+/* === NOTIFICAÇÕES === */
+.notif-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.notif-msg {
+  padding: 12px 18px;
+  border-radius: var(--radius);
+  color: #fff;
+  font-size: 0.9rem;
+  animation: fadeInOut 4s forwards;
+  opacity: 0.95;
+}
+
+.notif-msg.success { background: #2ecc71; }
+.notif-msg.error { background: #e74c3c; }
+.notif-msg.info { background: #3498db; }
+
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: translateY(-10px); }
+  10%, 90% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-10px); }
+}
+
 /* === SCROLLBAR === */
 ::-webkit-scrollbar {
   width: 8px;
@@ -325,7 +467,43 @@ tbody tr:hover {
   border-radius: 10px;
 }
 
-/* === RESPONSIVIDADE === */
+/* ==============================
+   UTILITÁRIOS DE FORMULÁRIO
+   ============================== */
+.form-group {
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 600;
+  color: var(--text);
+  font-size: 14px;
+}
+
+.form-group input, 
+.form-group select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #333;
+  border-radius: var(--radius);
+  background: var(--hover);
+  color: var(--text);
+  font-size: 14px;
+}
+
+.form-group small {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+/* ==============================
+   RESPONSIVIDADE
+   ============================== */
 @media (max-width: 900px) {
   .sidebar {
     width: 180px;
@@ -372,4 +550,77 @@ tbody tr:hover {
   .content h2 {
     font-size: 1.5rem;
   }
+}
+
+/* ==============================
+   ESTILOS PARA LOGIN
+   ============================== */
+.login-container {
+  margin: auto;
+  background: var(--panel);
+  padding: 40px;
+  border-radius: var(--radius);
+  box-shadow: 0 0 25px rgba(0,0,0,0.5);
+  width: 360px;
+  text-align: center;
+  position: relative;
+}
+
+.login-container h2 {
+  margin-bottom: 20px;
+  color: var(--accent);
+}
+
+.login-container input {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: none;
+  border-radius: var(--radius);
+  background: var(--hover);
+  color: var(--text);
+  font-size: 14px;
+}
+
+.login-container button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  border: none;
+  border-radius: var(--radius);
+  background: var(--accent);
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.login-container button:hover {
+  background: #ff4d4d;
+}
+
+.login-footer {
+  margin-top: 15px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+a.switch-link {
+  display: inline-block;
+  margin-top: 10px;
+  color: var(--accent);
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 14px;
+}
+
+/* Fade effect */
+.fade {
+  transition: opacity 0.4s ease;
+  opacity: 1;
+}
+.fade.hidden {
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
 }

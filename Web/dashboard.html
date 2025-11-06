@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel de Aplicações</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="sidebar">
+    <div class="logo"><img src="src/logo.png" style="width: 90%;"></div>
+    <div class="nav">
+      <div class="nav-item active">Aplicações</div>
+    </div>
+    <div class="footer">
+      <img id="userAvatar" src="https://res.cloudinary.com/dylkeqcms/image/upload/v1762125098/default_uqhrk3.jpg" alt="Avatar">
+      <div class="footer-text">
+        <h3 id="userName">Usuário</h3>
+        <p id="userEmail">email@example.com</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="topbar">
+      <h2>Minhas Aplicações</h2>
+      <div class="actions">
+        <button class="btn primary" onclick="abrirModalApp()">+ Nova Aplicação</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="apps-container" id="appsContainer">
+        <p class="no-data">Carregando aplicações...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Aplicação -->
+  <div class="modal" id="modalApp">
+    <div class="modal-content" style="width: 450px;">
+      <h3>Nova Aplicação</h3>
+      
+      <div class="form-group">
+        <label for="appName">Nome da Aplicação</label>
+        <input type="text" id="appName" placeholder="Ex: Meu App Premium">
+      </div>
+
+      <div class="form-group">
+        <label for="appImage">Imagem</label>
+        <input type="file" id="appImage" accept="image/*">
+      </div>
+
+      <div class="form-group">
+        <label for="configTag">TAG</label>
+        <input type="text" id="configTag" placeholder="Ex: APP001">
+        <small>Identificador único para a aplicação (será usado no prefixo das licenças)</small>
+      </div>
+
+      <div class="form-group">
+        <label for="configDuration">Duração Padrão (dias)</label>
+        <input type="number" id="configDuration" placeholder="Ex: 30" value="30" min="1">
+        <small>Duração padrão em dias para as licenças desta aplicação</small>
+      </div>
+
+      <div class="modal-buttons">
+        <button class="btn primary" onclick="criarAplicacao()">Criar Aplicação</button>
+        <button class="btn cancel" onclick="fecharModal('modalApp')">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notificações -->
+  <div class="notif-container" id="notifContainer"></div>
+
+  <script>
+    const apiUrl = "http://localhost:3000/api";
+
+    // === Função de notificação ===
+    function notify(type, message) {
+      const div = document.createElement("div");
+      div.className = `notif-msg ${type}`;
+      div.innerText = message;
+      notifContainer.appendChild(div);
+      setTimeout(() => div.remove(), 4000);
+    }
+
+    // === Modal ===
+    function abrirModalApp() { 
+      document.getElementById('modalApp').classList.add("active");
+    }
+    
+    function fecharModal(modalId) { 
+      document.getElementById(modalId).classList.remove("active"); 
+    }
+
+    // === Carregar informações do usuário logado ===
+    async function carregarUsuario() {
+      const userId = localStorage.getItem("userId");
+      
+      if (!userId) {
+        notify("error", "Usuário não autenticado");
+        return;
+      }
+
+      try {
+        const res = await fetch(`${apiUrl}/users/${userId}`);
+        
+        if (!res.ok) throw new Error(`Erro ${res.status}`);
+        
+        const user = await res.json();
+        
+        // Atualizar footer
+        document.getElementById("userName").textContent = user.name;
+        document.getElementById("userEmail").textContent = user.email;
+        document.getElementById("userAvatar").src = user.avatarUrl;
+        
+      } catch (err) {
+        console.error('Erro ao carregar usuário:', err);
+        notify("error", "Erro ao carregar informações do usuário");
+      }
+    }
+
+    // === Carregar Aplicações ===
+    async function carregarAplicacoes() {
+      const userId = localStorage.getItem("userId");
+      
+      if (!userId) {
+        document.getElementById('appsContainer').innerHTML = '<p class="no-data">Usuário não autenticado</p>';
+        return;
+      }
+
+      try {
+        const res = await fetch(`${apiUrl}/applications?ownerId=${userId}`);
+        
+        if (!res.ok) throw new Error(`Erro ${res.status}`);
+        
+        const data = await res.json();
+        const container = document.getElementById('appsContainer');
+        
+        if (!data || data.length === 0) {
+          container.innerHTML = '<p class="no-data">Nenhuma aplicação encontrada</p>';
+          return;
+        }
+
+        container.innerHTML = '';
+        data.forEach(app => {
+          const card = document.createElement("div");
+          card.classList.add("app-card");
+          card.style.cursor = 'pointer';
+          card.onclick = () => abrirPaginaLicencas(app);
+          card.innerHTML = `
+            <img src="${app.image}" alt="${app.name}" onerror="this.src='https://res.cloudinary.com/dylkeqcms/image/upload/v1762125098/default_uqhrk3.jpg'">
+            <div class="info">
+              <h4>${app.name}</h4>
+              <p>TAG: ${app.config.tag}</p>
+              <p>Duração: ${app.config.default_duration} dias</p>
+            </div>`;
+          container.appendChild(card);
+        });
+      } catch (err) {
+        console.error('Erro ao carregar aplicações:', err);
+        document.getElementById('appsContainer').innerHTML = '<p class="no-data">Erro ao carregar aplicações</p>';
+      }
+    }
+
+    // === Abrir página de licenças ===
+    function abrirPaginaLicencas(app) {
+      // Salva os dados da aplicação no localStorage para usar na próxima página
+      localStorage.setItem('selectedApp', JSON.stringify(app));
+      // Abre a página de licenças
+      window.location.href = 'licenses.html';
+    }
+
+    // === Criar Aplicação ===
+    async function criarAplicacao() {
+      const userId = localStorage.getItem("userId");
+      
+      if (!userId) {
+        notify("error", "Usuário não autenticado");
+        return;
+      }
+
+      const appName = document.getElementById("appName").value.trim();
+      const appImage = document.getElementById("appImage").files[0];
+      const configTag = document.getElementById("configTag").value.trim();
+      const configDuration = document.getElementById("configDuration").value;
+
+      if (!appName || !appImage || !configTag || !configDuration) {
+        notify("info", "Preencha todos os campos obrigatórios");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("name", appName);
+      formData.append("image", appImage);
+      formData.append("ownerID", JSON.stringify([parseInt(userId)]));
+      formData.append("config", JSON.stringify({
+        tag: configTag,
+        types: ["standard"], // Tipo padrão único
+        default_duration: parseInt(configDuration)
+      }));
+
+      try {
+        const res = await fetch(`${apiUrl}/applications`, { 
+          method: "POST", 
+          body: formData 
+        });
+
+        const result = await res.json();
+
+        if (!res.ok) throw new Error(result.error || `Erro ${res.status}`);
+
+        notify("success", "Aplicação criada com sucesso!");
+        fecharModal('modalApp');
+        // Limpar campos
+        document.getElementById("appName").value = "";
+        document.getElementById("appImage").value = "";
+        document.getElementById("configTag").value = "";
+        document.getElementById("configDuration").value = "30";
+        carregarAplicacoes();
+      } catch (err) {
+        console.error('Erro ao criar aplicação:', err);
+        notify("error", err.message);
+      }
+    }
+
+    // === Inicialização ===
+    document.addEventListener('DOMContentLoaded', function() {
+      carregarUsuario();
+      carregarAplicacoes();
+      
+      document.getElementById('modalApp').addEventListener('click', function(e) {
+        if (e.target === this) fecharModal('modalApp');
+      });
+    });
+  </script>
+
+  <style>
+    .form-group {
+      margin-bottom: 15px;
+      text-align: left;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 600;
+      color: var(--text);
+      font-size: 14px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #333;
+      border-radius: var(--radius);
+      background: var(--hover);
+      color: var(--text);
+      font-size: 14px;
+    }
+
+    .form-group small {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .modal-content h3 {
+      margin-bottom: 20px;
+      color: var(--accent);
+      text-align: center;
+    }
+
+    .app-card {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .app-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+    }
+  </style>
+</body>
+</html>

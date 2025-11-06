@@ -156,6 +156,7 @@
 
     <div id="registerForm" class="fade hidden">
       <input type="text" id="registerUsername" placeholder="Nome de usuário">
+      <input type="email" id="registerEmail" placeholder="Email">
       <input type="password" id="registerPassword" placeholder="Senha">
       <button id="registerBtn">Registrar</button>
     </div>
@@ -163,7 +164,7 @@
     <a id="switchLink" class="switch-link">Ainda não tem conta? Registrar</a>
 
     <div class="login-footer">
-      © 2025 Key Auther
+      © 2025 Key Author
     </div>
   </div>
 
@@ -180,7 +181,7 @@
   </div>
 
   <script>
-    const API_URL = "https://keyer.camposcloud.app/api";
+    const API_URL = "http://localhost:3000/api";
 
     // Forms e botões
     const loginForm = document.getElementById("loginForm");
@@ -193,6 +194,7 @@
     const loginUsername = document.getElementById("loginUsername");
     const loginPassword = document.getElementById("loginPassword");
     const registerUsername = document.getElementById("registerUsername");
+    const registerEmail = document.getElementById("registerEmail");
     const registerPassword = document.getElementById("registerPassword");
 
     // Modal elements
@@ -220,60 +222,76 @@
       };
     }
 
+    // === LOGIN ===
     async function login() {
       const username = loginUsername.value.trim();
       const password = loginPassword.value.trim();
-      if (!username || !password) return openModal("Erro", "Preencha todos os campos.");
+
+      if (!username || !password)
+        return openModal("Erro", "Preencha todos os campos.");
 
       try {
-        const res = await fetch(`${API_URL}/users/name/${encodeURIComponent(username)}?pass=${encodeURIComponent(password)}`);
-        if (!res.ok) throw new Error("Usuário ou senha incorretos");
-        const user = await res.json();
-        localStorage.setItem("userId", user.id);
-        openModal("Sucesso", `Bem-vindo, ${user.name}!`, () => {
-          window.location.href = "licenses.html";
+        const res = await fetch(`${API_URL}/users/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name: username, pass: password })
         });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Usuário ou senha incorretos.");
+
+        localStorage.setItem("userId", data.id);
+        openModal("Sucesso", `Bem-vindo, ${data.name}!`, () => {
+          window.location.href = "dashboard.html";
+        });
+
       } catch (error) {
-        openModal("Erro", error.message);
+        openModal("Erro", error.message || "Falha ao conectar com o servidor.");
       }
     }
 
+    // === REGISTRO ===
     async function register() {
       const username = registerUsername.value.trim();
+      const mail = registerEmail.value.trim();
       const password = registerPassword.value.trim();
-      if (!username || !password) return openModal("Erro", "Preencha todos os campos para registrar.");
+
+      if (!username || !mail || !password)
+        return openModal("Erro", "Preencha todos os campos para registrar.");
+
+      if (!/\S+@\S+\.\S+/.test(mail))
+        return openModal("Erro", "Insira um e-mail válido.");
 
       try {
         const res = await fetch(`${API_URL}/users`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name: username, pass: password })
+          body: JSON.stringify({ name: username, email: mail, pass: password })
         });
-        if (!res.ok) {
-          const err = await res.json();
-          throw new Error(err.error || "Erro ao registrar");
-        }
-        const user = await res.json();
-        localStorage.setItem("userId", user.id);
-        openModal("Sucesso", `Usuário registrado com sucesso, ${user.name}!`, () => {
-          window.location.href = "licenses.html";
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Erro ao registrar.");
+
+        localStorage.setItem("userId", data.id);
+        openModal("Sucesso", `Usuário ${data.name} registrado com sucesso!`, () => {
+          window.location.href = "dashboard.html";
         });
+
       } catch (error) {
-        openModal("Erro", error.message);
+        openModal("Erro", error.message || "Falha ao conectar com o servidor.");
       }
     }
 
+    // === TROCA ENTRE LOGIN / REGISTRO ===
     function toggleForms() {
       isRegistering = !isRegistering;
       if (isRegistering) {
         loginForm.classList.add("hidden");
         setTimeout(() => { registerForm.classList.remove("hidden"); }, 50);
-        formTitle.textContent = "Registrar";
         switchLink.textContent = "Já tem uma conta? Entrar";
       } else {
         registerForm.classList.add("hidden");
         setTimeout(() => { loginForm.classList.remove("hidden"); }, 50);
-        formTitle.textContent = "Login";
         switchLink.textContent = "Ainda não tem conta? Registrar";
       }
     }
@@ -283,9 +301,8 @@
     registerBtn.addEventListener("click", register);
 
     // Enter press
-    loginPassword.addEventListener("keyup", e => { if(e.key==="Enter") login(); });
-    registerPassword.addEventListener("keyup", e => { if(e.key==="Enter") register(); });
-
+    loginPassword.addEventListener("keyup", e => { if (e.key === "Enter") login(); });
+    registerPassword.addEventListener("keyup", e => { if (e.key === "Enter") register(); });
   </script>
 </body>
 </html>
