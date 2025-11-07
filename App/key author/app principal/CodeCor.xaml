@@ -1,0 +1,34 @@
+﻿<Window x:Class="key_author.app_principal.CodeCor"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:key_author.app_principal"
+        mc:Ignorable="d"
+        Title="CodeCor" Height="450" Width="800">
+    <Grid Margin="18">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0 0 0 10">
+            <TextBox x:Name="Input1" Width="180" Margin="0 0 10 0" Padding="6"
+                     Background="#222" Foreground="#ddd" BorderBrush="#333"/>
+            <TextBox x:Name="Input2" Width="180" Margin="0 0 10 0" Padding="6"
+                     Background="#222" Foreground="#ddd" BorderBrush="#333"/>
+            <TextBox x:Name="Input3" Width="180" Padding="6"
+                     Background="#222" Foreground="#ddd" BorderBrush="#333"/>
+        </StackPanel>
+
+        <Button x:Name="ActionButton" Grid.Row="1" Content="Executar" Width="120" Height="34"
+                HorizontalAlignment="Left" Margin="0 0 0 10"
+                Background="#2A2A2A" Foreground="#ddd" BorderBrush="#333"/>
+
+        <TextBox x:Name="LogBox" Grid.Row="2" Background="#181818" Foreground="#ccc"
+                 BorderBrush="#333" BorderThickness="1" Padding="8"
+                 TextWrapping="Wrap" AcceptsReturn="True" IsReadOnly="True"
+                 VerticalScrollBarVisibility="Auto"/>
+    </Grid>
+</Window>
