@@ -65,35 +65,23 @@
     </div>
   </div>
 
-  <!-- Modal Nova Licença -->
-  <div class="modal" id="modalLicenca">
-    <div class="modal-content" style="width: 400px;">
-      <h3>Nova Licença</h3>
-      
-      <div class="form-group">
-        <label for="licenseDuration">Duração (dias)</label>
-        <input type="number" id="licenseDuration" value="30" min="1">
-        <small>Duração em dias a partir da primeira ativação</small>
-      </div>
+<!-- Modal Nova Licença -->
+<div class="modal" id="modalLicenca">
+  <div class="modal-content" style="width: 400px;">
+    <h3>Nova Licença</h3>
+    
+    <div class="form-group">
+      <label for="licenseDuration">Duração (dias)</label>
+      <input type="number" id="licenseDuration" value="30" min="1">
+      <small>Duração em dias a partir da primeira ativação</small>
+    </div>
 
-      <div class="form-group">
-        <label>Usuário</label>
-        <input type="text" id="userInfoDisplay" readonly style="background: var(--panel); cursor: not-allowed;">
-        <small>Licença será associada ao usuário logado</small>
-      </div>
-
-      <div class="form-group">
-        <label>Tag da Aplicação</label>
-        <input type="text" id="appTagDisplay" readonly style="background: var(--panel); cursor: not-allowed;">
-        <small>Esta tag será usada no prefixo da chave da licença</small>
-      </div>
-
-      <div class="modal-buttons">
-        <button class="btn primary" onclick="criarLicenca()">Criar Licença</button>
-        <button class="btn cancel" onclick="fecharModal('modalLicenca')">Cancelar</button>
-      </div>
+    <div class="modal-buttons">
+      <button class="btn primary" onclick="criarLicenca()">Criar Licença</button>
+      <button class="btn cancel" onclick="fecharModal('modalLicenca')">Cancelar</button>
     </div>
   </div>
+</div>
 
   <!-- Modal de Mensagem / Confirmação -->
   <div class="modal" id="modalMensagem">
@@ -110,7 +98,7 @@
   <div class="notif-container" id="notifContainer"></div>
 
   <script>
-    const apiUrl = "http://localhost:3000/api";
+    const apiUrl = "https://keyer.camposcloud.app/api";
     let currentApp = null;
     let currentUserId = null;
 
@@ -142,7 +130,6 @@
         userName.textContent = user.name;
         userEmail.textContent = user.email;
         userAvatar.src = user.avatarUrl;
-        userInfoDisplay.value = `${user.name} (ID: ${userId})`;
       } catch {
         mostrarModalMensagem({ titulo: "Erro", texto: "Erro ao carregar dados do usuário", tipo: "error" });
       }
@@ -160,7 +147,6 @@
       appName.textContent = currentApp.name;
       appImage.src = currentApp.image;
       appDetails.textContent = `Tag: ${currentApp.config.tag} | Duração padrão: ${currentApp.config.default_duration} dias`;
-      appTagDisplay.value = currentApp.config.tag;
       licenseDuration.value = currentApp.config.default_duration;
     }
 

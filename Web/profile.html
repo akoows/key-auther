@@ -204,6 +204,7 @@
             <p id="licenseCount">0</p>
           </div>
         </div>
+        <button class="btn" onclick="abrirModalSenha()">Alterar senha</button>
       </div>
     </div>
   </div>
@@ -220,11 +221,26 @@
     </div>
   </div>
 
+  <!-- === MODAL DE ALTERAÇÃO DE SENHA === -->
+  <div id="modalSenha" class="modal">
+    <div class="modal-content">
+      <h3>Alterar senha</h3>
+      <input type="password" id="senhaAtual" placeholder="Senha atual">
+      <input type="password" id="novaSenha" placeholder="Nova senha">
+      <input type="password" id="confirmarSenha" placeholder="Confirmar nova senha">
+      <div class="btns">
+        <button class="btn btn-cancel" onclick="fecharModalSenha()">Cancelar</button>
+        <button class="btn btn-save" onclick="salvarNovaSenha()">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+
   <div id="notifContainer" class="notif-container"></div>
 
   <script src="./src/scripts/auth.js"></script>
   <script>
-    const apiUrl = "http://localhost:3000/api";
+    const apiUrl = "https://keyer.camposcloud.app/api";
     const userId = localStorage.getItem("userId");
 
     if (!userId) window.location.href = "index.html";
@@ -328,6 +344,67 @@
         notify("error", "Erro ao atualizar imagem de perfil.");
       }
     });
+
+    function abrirModalSenha() {
+      document.getElementById("senhaAtual").value = "";
+      document.getElementById("novaSenha").value = "";
+      document.getElementById("confirmarSenha").value = "";
+      document.getElementById("modalSenha").style.display = "flex";
+    }
+
+    function fecharModalSenha() {
+      document.getElementById("modalSenha").style.display = "none";
+    }
+
+    async function salvarNovaSenha() {
+      const senhaAtual = document.getElementById("senhaAtual").value.trim();
+      const novaSenha = document.getElementById("novaSenha").value.trim();
+      const confirmarSenha = document.getElementById("confirmarSenha").value.trim();
+
+      if (!senhaAtual || !novaSenha || !confirmarSenha) {
+        return notify("error", "Preencha todos os campos.");
+      }
+
+      if (novaSenha.length < 6) {
+        return notify("error", "A nova senha deve ter pelo menos 6 caracteres.");
+      }
+
+      if (novaSenha !== confirmarSenha) {
+        return notify("error", "As senhas não coincidem.");
+      }
+
+      try {
+        // Verifica senha atual
+        const resLogin = await fetch(`${apiUrl}/users/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name: document.getElementById("profileName").textContent, pass: senhaAtual })
+        });
+
+        if (!resLogin.ok) {
+          const err = await resLogin.json();
+          throw new Error(err.error || "Senha atual incorreta.");
+        }
+
+        // Atualiza senha
+        const res = await fetch(`${apiUrl}/users/${userId}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ pass: novaSenha })
+        });
+
+        if (!res.ok) {
+          const errData = await res.json();
+          throw new Error(errData.error || "Erro ao atualizar senha.");
+        }
+
+        notify("success", "Senha atualizada com sucesso!");
+        fecharModalSenha();
+
+      } catch (err) {
+        notify("error", err.message);
+      }
+    }
 
     carregarPerfil();
   </script>

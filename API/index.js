@@ -536,5 +536,5 @@ app.listen(port, () => {
     console.log(`   👤 Users: POST/GET/PUT/DELETE /api/users`);
     console.log(`   🔑 Licenses: POST/GET/PATCH/DELETE /api/licenses`);
     console.log(`   📱 Applications: POST/GET/DELETE /api/applications`);
-    console.log(`🌐 | Acesse: http://localhost:${port}`);
+    console.log(`🌐 | Acesse: http://https://keyer.camposcloud.app/api`);
 });

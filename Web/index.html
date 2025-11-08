@@ -73,7 +73,6 @@
       font-size: 14px;
     }
 
-    /* Fade effect */
     .fade {
       transition: opacity 0.4s ease;
       opacity: 1;
@@ -181,7 +180,7 @@
   </div>
 
   <script>
-    const API_URL = "http://localhost:3000/api";
+    const API_URL = "https://keyer.camposcloud.app/api";
 
     // Forms e botões
     const loginForm = document.getElementById("loginForm");
@@ -189,7 +188,6 @@
     const loginBtn = document.getElementById("loginBtn");
     const registerBtn = document.getElementById("registerBtn");
     const switchLink = document.getElementById("switchLink");
-    const formTitle = document.getElementById("formTitle");
 
     const loginUsername = document.getElementById("loginUsername");
     const loginPassword = document.getElementById("loginPassword");
@@ -230,6 +228,9 @@
       if (!username || !password)
         return openModal("Erro", "Preencha todos os campos.");
 
+      if (password.length < 6)
+        return openModal("Erro", "A senha deve ter pelo menos 6 caracteres.");
+
       try {
         const res = await fetch(`${API_URL}/users/login`, {
           method: "POST",
@@ -262,6 +263,9 @@
       if (!/\S+@\S+\.\S+/.test(mail))
         return openModal("Erro", "Insira um e-mail válido.");
 
+      if (password.length < 6)
+        return openModal("Erro", "A senha deve ter pelo menos 6 caracteres.");
+
       try {
         const res = await fetch(`${API_URL}/users`, {
           method: "POST",
@@ -273,9 +277,7 @@
         if (!res.ok) throw new Error(data.error || "Erro ao registrar.");
 
         localStorage.setItem("userId", data.id);
-        openModal("Sucesso", `Usuário ${data.name} registrado com sucesso!`, () => {
-          window.location.href = "dashboard.html";
-        });
+        window.location.href = "dashboard.html";
 
       } catch (error) {
         openModal("Erro", error.message || "Falha ao conectar com o servidor.");
