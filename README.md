@@ -1,7 +1,5 @@
 # 🔑 Key Auther
 
-<img src="./Web/src/logo.png" alt="Key Author Logo" width="300"/>
-
 Sistema completo de **autenticação e validação de chaves de licença** via **API e painel web**, desenvolvido para facilitar o controle de acessos, distribuição de licenças e integração com aplicações externas.
 
 ---
@@ -11,9 +9,9 @@ Sistema completo de **autenticação e validação de chaves de licença** via *
 O **Key Author** permite que você gere, valide e gerencie licenças de software de forma simples e segura.
 
 O sistema é composto por:
-- 🧠 **API RESTful** para autenticação e validação de chaves  
-- 🌐 **Painel Web** para administração de licenças, usuários e configurações  
-- 🧩 **Integração com aplicativos** externos via endpoints seguros  
+- **API RESTful** para autenticação e validação de chaves  
+- **Painel Web** para administração de licenças, usuários e configurações  
+- **Integração com aplicativos** externos via endpoints seguros  
 
 ---
 
