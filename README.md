@@ -77,7 +77,7 @@ O sistema é composto por:
 
 Desenvolvido por [**Luis Fernando**](https://github.com/akoows), [**Bruno Santana**](https://github.com/voante10), [**Giovana Almeida**](https://www.instagram.com/giyy_allst) e [**Breno Ledo**](https://www.instagram.com/l3do.uwu) 
 
-💼 Projeto: **Key Author**  
+💼 Site: [**Key Author**](https://akoows.github.io/keyauthor)  
 
 🔗 Repositório: [github.com/akoows/key-auther](https://github.com/akoows/key-auther)
 
