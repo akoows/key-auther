@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Configurações da Aplicação</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="sidebar">
+    <div class="logo"><img src="src/logo.png" style="width: 90%;"></div>
+    <div class="nav">
+      <div class="nav-item" onclick="irPara('licenses.html')">Licenças</div>
+      <div class="nav-item active">Configurações</div>
+    </div>
+    <div class="footer" onclick="window.location.href='profile.html'">
+      <img id="userAvatar" src="https://res.cloudinary.com/dylkeqcms/image/upload/v1762125098/default_uqhrk3.jpg" alt="Avatar">
+      <div class="footer-text">
+        <h3 id="userName">Usuário</h3>
+        <p id="userEmail">email@example.com</p>
+        <button class="logout-btn" onclick="logout()">Sair</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="nav-item" onclick="voltarParaAplicacoes()">← Voltar</div>
+      <h2 id="appTitle">Configurações da Aplicação</h2>
+    </div>
+
+    <div class="content">
+      <div class="app-info" id="appInfo" style="background: var(--panel); padding: 20px; border-radius: var(--radius); margin-bottom: 20px; border: 1px solid #1f1f1f;">
+        <div style="display: flex; align-items: center; gap: 15px;">
+          <img id="appImage" src="" alt="App" style="width: 60px; height: 60px; border-radius: var(--radius); object-fit: cover;">
+          <div>
+            <h3 id="appName">Nome da Aplicação</h3>
+            <p id="appDetails" style="color: var(--muted); font-size: 14px; margin: 5px 0 0 0;"></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-panel" style="background: var(--panel); padding: 25px; border-radius: var(--radius); border: 1px solid #1f1f1f;">
+        <h3 style="color: var(--accent); margin-bottom: 20px;">Editar Configurações</h3>
+        
+        <div class="form-group">
+          <label for="appTag">Tag da Aplicação</label>
+          <input type="text" id="appTag" placeholder="Exemplo: MYAPP">
+          <small>Usada no prefixo das chaves de licença</small>
+        </div>
+
+        <div class="form-group">
+          <label for="defaultDuration">Duração Padrão (dias)</label>
+          <input type="number" id="defaultDuration" min="1" placeholder="30">
+          <small>Tempo padrão de validade para novas licenças</small>
+        </div>
+
+        <div class="actions">
+          <button class="btn primary" onclick="salvarConfiguracoes()">Salvar Alterações</button>
+          <button class="btn cancel" onclick="voltarParaAplicacoes()">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notificações -->
+  <div class="notif-container" id="notifContainer"></div>
+
+  <script>
+    const apiUrl = "http://localhost:3000/api";
+    let currentApp = null;
+    let currentUserId = null;
+
+    function irPara(pagina) {
+      window.location.href = pagina;
+    }
+
+    function voltarParaAplicacoes() {
+      window.location.href = 'dashboard.html';
+    }
+
+    function notify(type, message) {
+      const div = document.createElement("div");
+      div.className = `notif-msg ${type}`;
+      div.innerText = message;
+      notifContainer.appendChild(div);
+      setTimeout(() => div.remove(), 4000);
+    }
+
+    // === Carregar usuário ===
+    async function carregarUsuario() {
+      const userId = localStorage.getItem("userId");
+      if (!userId) {
+        notify("error", "Usuário não autenticado");
+        setTimeout(voltarParaAplicacoes, 2000);
+        return;
+      }
+
+      currentUserId = userId;
+
+      try {
+        const res = await fetch(`${apiUrl}/users/${userId}`);
+        if (res.ok) {
+          const user = await res.json();
+          document.getElementById("userName").textContent = user.name;
+          document.getElementById("userEmail").textContent = user.email;
+          document.getElementById("userAvatar").src = user.avatarUrl;
+        }
+      } catch (err) {
+        console.error('Erro ao carregar usuário:', err);
+      }
+    }
+
+    // === Carregar aplicação selecionada ===
+    function carregarAplicacao() {
+      const appData = localStorage.getItem('selectedApp');
+      if (!appData) {
+        notify("error", "Nenhuma aplicação selecionada");
+        setTimeout(voltarParaAplicacoes, 2000);
+        return;
+      }
+
+      currentApp = JSON.parse(appData);
+
+      document.getElementById('appTitle').textContent = `Configurações - ${currentApp.name}`;
+      document.getElementById('appName').textContent = currentApp.name;
+      document.getElementById('appImage').src = currentApp.image;
+      document.getElementById('appDetails').textContent = 
+        `Tag atual: ${currentApp.config.tag} | Duração padrão: ${currentApp.config.default_duration} dias`;
+
+      document.getElementById('appTag').value = currentApp.config.tag;
+      document.getElementById('defaultDuration').value = currentApp.config.default_duration;
+    }
+
+    // SALVAR CONFIGURAÇÕES
+    async function salvarConfiguracoes() {
+    const novaTag = document.getElementById("appTag").value.trim();
+    const novaDuracao = parseInt(document.getElementById("defaultDuration").value);
+
+    if (!novaTag || isNaN(novaDuracao) || novaDuracao <= 0) {
+        notify("info", "Preencha todos os campos corretamente");
+        return;
+    }
+
+    try {
+        const res = await fetch(`${apiUrl}/applications/${currentApp.id}/config`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          tag: novaTag,
+          default_duration: parseInt(novaDuracao)
+      })
+        });
+
+        if (!res.ok) throw new Error('Erro ao salvar configurações.');
+
+        const data = await res.json();
+
+        // Atualiza localmente para refletir as mudanças
+        currentApp.config = data.updatedApp.config;
+        localStorage.setItem("selectedApp", JSON.stringify(currentApp));
+
+        let apps = JSON.parse(localStorage.getItem("applications")) || [];
+        apps = apps.map(a => a.id === currentApp.id ? currentApp : a);
+        localStorage.setItem("applications", JSON.stringify(apps));
+
+        notify("success", "Configurações salvas no servidor!");
+        document.getElementById('appDetails').textContent = 
+        `Tag: ${novaTag} | Duração padrão: ${novaDuracao} dias`;
+
+    } catch (err) {
+        console.error(err);
+        notify("error", "Falha ao salvar configurações no servidor");
+    }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      carregarUsuario();
+      carregarAplicacao();
+    });
+
+  </script>
+  <script src="src/scripts/auth.js"></script>
+</body>
+</html>

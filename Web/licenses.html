@@ -10,20 +10,22 @@
   <div class="sidebar">
     <div class="logo"><img src="src/logo.png" style="width: 90%;"></div>
     <div class="nav">
-      <div class="nav-item" onclick="voltarParaAplicacoes()">← Voltar</div>
       <div class="nav-item active">Licenças</div>
+      <div class="nav-item" onclick="window.location.href='configs.html'">Configurações</div>
     </div>
-    <div class="footer">
+    <div class="footer" onclick="window.location.href='profile.html'">
       <img id="userAvatar" src="https://res.cloudinary.com/dylkeqcms/image/upload/v1762125098/default_uqhrk3.jpg" alt="Avatar">
       <div class="footer-text">
         <h3 id="userName">Usuário</h3>
         <p id="userEmail">email@example.com</p>
+        <button class="logout-btn" onclick="logout()">Sair</button>
       </div>
     </div>
   </div>
 
   <div class="main">
     <div class="topbar">
+      <div class="nav-item" onclick="voltarParaAplicacoes()">← Voltar</div>
       <h2 id="appTitle">Licenças da Aplicação</h2>
       <div class="actions">
         <button class="btn primary" onclick="abrirModalLicenca()">+ Nova Licença</button>
@@ -31,7 +33,6 @@
     </div>
 
     <div class="content">
-      <!-- Informações da Aplicação -->
       <div class="app-info" id="appInfo" style="background: var(--panel); padding: 20px; border-radius: var(--radius); margin-bottom: 20px; border: 1px solid #1f1f1f;">
         <div style="display: flex; align-items: center; gap: 15px;">
           <img id="appImage" src="" alt="App" style="width: 60px; height: 60px; border-radius: var(--radius); object-fit: cover;">
@@ -42,7 +43,7 @@
         </div>
       </div>
 
-      <!-- Lista de Licenças -->
+      <!-- Tabela de Licenças -->
       <div class="table-container">
         <table>
           <thead>
@@ -94,6 +95,17 @@
     </div>
   </div>
 
+  <!-- Modal de Mensagem / Confirmação -->
+  <div class="modal" id="modalMensagem">
+    <div class="modal-content" style="max-width: 420px;">
+      <h3 id="modalMensagemTitulo">Mensagem</h3>
+      <p id="modalMensagemTexto" style="margin: 15px 0; color: var(--text);"></p>
+      <div class="modal-buttons" id="modalMensagemBotoes">
+        <button class="btn primary" onclick="fecharModalMensagem()">OK</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Notificações -->
   <div class="notif-container" id="notifContainer"></div>
 
@@ -102,7 +114,6 @@
     let currentApp = null;
     let currentUserId = null;
 
-    // === Função de notificação ===
     function notify(type, message) {
       const div = document.createElement("div");
       div.className = `notif-msg ${type}`;
@@ -111,321 +122,201 @@
       setTimeout(() => div.remove(), 4000);
     }
 
-    // === Navegação ===
-    function voltarParaAplicacoes() {
-      window.location.href = 'dashboard.html';
-    }
+    function voltarParaAplicacoes() { window.location.href = 'dashboard.html'; }
 
-    // === Modal ===
-    function abrirModalLicenca() { 
-      document.getElementById('modalLicenca').classList.add("active");
-    }
-    
-    function fecharModal(modalId) { 
-      document.getElementById(modalId).classList.remove("active"); 
-    }
+    function abrirModalLicenca() { document.getElementById('modalLicenca').classList.add("active"); }
+    function fecharModal(id) { document.getElementById(id).classList.remove("active"); }
 
-    // === Carregar informações do usuário ===
     async function carregarUsuario() {
       const userId = localStorage.getItem("userId");
-      
       if (!userId) {
-        notify("error", "Usuário não autenticado");
+        mostrarModalMensagem({ titulo: "Erro", texto: "Usuário não autenticado", tipo: "error" });
         setTimeout(voltarParaAplicacoes, 2000);
         return;
       }
-
       currentUserId = userId;
-
       try {
         const res = await fetch(`${apiUrl}/users/${userId}`);
-        if (res.ok) {
-          const user = await res.json();
-          document.getElementById("userName").textContent = user.name;
-          document.getElementById("userEmail").textContent = user.email;
-          document.getElementById("userAvatar").src = user.avatarUrl;
-          document.getElementById("userInfoDisplay").value = `${user.name} (ID: ${userId})`;
-          
-          // Salva no localStorage para próxima vez
-          localStorage.setItem("userName", user.name);
-          localStorage.setItem("userEmail", user.email);
-          if (user.avatarUrl) {
-            localStorage.setItem("userAvatar", user.avatarUrl);
-          }
-        } else {
-          throw new Error('Erro ao carregar usuário');
-        }
-      } catch (err) {
-        console.error('Erro ao carregar dados do usuário:', err);
-        notify("error", "Erro ao carregar dados do usuário");
+        const user = await res.json();
+        if (!res.ok) throw new Error("Erro ao carregar usuário");
+        userName.textContent = user.name;
+        userEmail.textContent = user.email;
+        userAvatar.src = user.avatarUrl;
+        userInfoDisplay.value = `${user.name} (ID: ${userId})`;
+      } catch {
+        mostrarModalMensagem({ titulo: "Erro", texto: "Erro ao carregar dados do usuário", tipo: "error" });
       }
     }
 
-    // === Carregar aplicação selecionada ===
     function carregarAplicacao() {
       const appData = localStorage.getItem('selectedApp');
-      
       if (!appData) {
-        notify("error", "Nenhuma aplicação selecionada");
+        mostrarModalMensagem({ titulo: "Erro", texto: "Nenhuma aplicação selecionada", tipo: "error" });
         setTimeout(voltarParaAplicacoes, 2000);
         return;
       }
-
       currentApp = JSON.parse(appData);
-      
-      // Atualizar interface com dados da aplicação
-      document.getElementById('appTitle').textContent = `Licenças - ${currentApp.name}`;
-      document.getElementById('appName').textContent = currentApp.name;
-      document.getElementById('appImage').src = currentApp.image;
-      document.getElementById('appDetails').textContent = 
-        `Tag: ${currentApp.config.tag} | Duração padrão: ${currentApp.config.default_duration} dias`;
-      
-      // Preencher a tag da aplicação no modal
-      document.getElementById('appTagDisplay').value = currentApp.config.tag;
-      
-      // Preencher duração padrão no modal
-      document.getElementById('licenseDuration').value = currentApp.config.default_duration;
+      appTitle.textContent = `Licenças - ${currentApp.name}`;
+      appName.textContent = currentApp.name;
+      appImage.src = currentApp.image;
+      appDetails.textContent = `Tag: ${currentApp.config.tag} | Duração padrão: ${currentApp.config.default_duration} dias`;
+      appTagDisplay.value = currentApp.config.tag;
+      licenseDuration.value = currentApp.config.default_duration;
     }
 
-    // === Carregar Licenças do Usuário Logado PARA A APLICAÇÃO ATUAL ===
     async function carregarLicencas() {
-      if (!currentUserId || !currentApp) {
-        document.getElementById('licensesTable').innerHTML = '<tr><td colspan="7" class="no-data">Dados insuficientes</td></tr>';
-        return;
-      }
-
+      if (!currentUserId || !currentApp) return;
       try {
         const res = await fetch(`${apiUrl}/licenses/user/${currentUserId}`);
-        
-        if (!res.ok) throw new Error(`Erro ${res.status}`);
-        
         const allLicenses = await res.json();
-        
-        // Filtrar licenças pela tag da aplicação atual
-        const licenses = allLicenses.filter(license => 
-          license.appTag === currentApp.config.tag
-        );
-        
+        const licenses = allLicenses.filter(l => l.appTag === currentApp.config.tag);
         const tbody = document.getElementById('licensesTable');
-        
-        if (!licenses || licenses.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="7" class="no-data">Nenhuma licença encontrada para esta aplicação</td></tr>';
+        if (!licenses.length) {
+          tbody.innerHTML = '<tr><td colspan="7" class="no-data">Nenhuma licença encontrada</td></tr>';
           return;
         }
-
-        tbody.innerHTML = '';
-        licenses.forEach(license => {
-          const statusClass = `license-status ${license.status}`;
-          const statusText = {
-            'inactive': 'Inativa',
-            'active': 'Ativa',
-            'expired': 'Expirada'
-          }[license.status] || license.status;
-
-          const activatedAt = license.activatedAt 
-            ? new Date(license.activatedAt).toLocaleDateString('pt-BR')
-            : '-';
-
-          const expirationDate = license.expirationDate
-            ? new Date(license.expirationDate).toLocaleDateString('pt-BR')
-            : '-';
-
+        tbody.innerHTML = "";
+        licenses.forEach(l => {
           const tr = document.createElement("tr");
+          const statusClass = `license-status ${l.status}`;
+          const statusText = { inactive: "Inativa", active: "Ativa", expired: "Expirada" }[l.status];
           tr.innerHTML = `
-            <td><code>${license.licenseKey}</code></td>
+            <td><code>${l.licenseKey}</code></td>
             <td><span class="${statusClass}">${statusText}</span></td>
-            <td><span class="app-tag">${license.appTag}</span></td>
-            <td>${license.durationDays} dias</td>
-            <td>${activatedAt}</td>
-            <td>${expirationDate}</td>
+            <td><span class="app-tag">${l.appTag}</span></td>
+            <td>${l.durationDays} dias</td>
+            <td>${l.activatedAt ? new Date(l.activatedAt).toLocaleDateString('pt-BR') : '-'}</td>
+            <td>${l.expirationDate ? new Date(l.expirationDate).toLocaleDateString('pt-BR') : '-'}</td>
             <td>
-              <button class="btn" onclick="copiarLicenca('${license.licenseKey}')" style="padding: 5px 10px; font-size: 12px; margin-right: 5px;">Copiar</button>
-              <button class="btn" onclick="validarLicenca('${license.licenseKey}')" style="padding: 5px 10px; font-size: 12px; margin-right: 5px; background: #27ae60;">Validar</button>
-              <button class="btn" onclick="deletarLicenca('${license.licenseKey}')" style="padding: 5px 10px; font-size: 12px; background: #e74c3c;">Deletar</button>
+              <button class="btn" onclick="copiarLicenca('${l.licenseKey}')">Copiar</button>
+              <button class="btn" style="background:#27ae60;" onclick="validarLicenca('${l.licenseKey}')">Validar</button>
+              <button class="btn" style="background:#e74c3c;" onclick="deletarLicenca('${l.licenseKey}')">Deletar</button>
             </td>`;
           tbody.appendChild(tr);
         });
-      } catch (err) {
-        console.error('Erro ao carregar licenças:', err);
-        document.getElementById('licensesTable').innerHTML = '<tr><td colspan="7" class="no-data">Erro ao carregar licenças</td></tr>';
+      } catch {
+        mostrarModalMensagem({ titulo: "Erro", texto: "Falha ao carregar licenças", tipo: "error" });
       }
     }
 
-    // === Criar Licença ===
     async function criarLicenca() {
       if (!currentUserId || !currentApp) {
-        notify("error", "Dados insuficientes");
+        mostrarModalMensagem({ titulo: "Erro", texto: "Dados insuficientes", tipo: "error" });
         return;
       }
-
-      const durationDays = parseInt(document.getElementById("licenseDuration").value);
-      const appTag = currentApp.config.tag; // Usa a tag da aplicação atual
-
+      const durationDays = parseInt(licenseDuration.value);
       if (!durationDays) {
-        notify("info", "Preencha a duração");
+        mostrarModalMensagem({ titulo: "Aviso", texto: "Preencha a duração", tipo: "warn" });
         return;
       }
-
       try {
         const res = await fetch(`${apiUrl}/licenses`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ 
-            userId: currentUserId, 
-            durationDays,
-            appTag 
-          })
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId: currentUserId, durationDays, appTag: currentApp.config.tag })
         });
-
         const result = await res.json();
-
-        if (!res.ok) throw new Error(result.error || `Erro ${res.status}`);
-
-        notify("success", "Licença criada com sucesso!");
+        if (!res.ok) throw new Error(result.error || "Erro ao criar licença");
         fecharModal('modalLicenca');
         carregarLicencas();
       } catch (err) {
-        console.error('Erro ao criar licença:', err);
-        notify("error", err.message);
+        mostrarModalMensagem({ titulo: "Erro", texto: err.message, tipo: "error" });
       }
     }
 
-    // === Validar Licença ===
     async function validarLicenca(licenseKey) {
       try {
-        const res = await fetch(`${apiUrl}/licenses/${licenseKey}/validate`, {
-          method: "POST"
-        });
-
+        const res = await fetch(`${apiUrl}/licenses/${licenseKey}/validate`, { method: "POST" });
         const result = await res.json();
-
-        if (!res.ok) {
-          notify("error", result.error || "Erro ao validar licença");
-          return;
-        }
-
-        if (result.status === 'activated') {
-          notify("success", `Licença ativada! Expira em: ${new Date(result.expirationDate).toLocaleDateString('pt-BR')}`);
-        } else if (result.status === 'active') {
-          notify("info", `Licença ativa! Expira em ${result.expiresIn} dias`);
-        }
-
-        // Recarrega a lista para atualizar os status
+        if (!res.ok) throw new Error(result.error);
+        const msg = result.status === "activated"
+          ? `Licença ativada! Expira em: ${new Date(result.expirationDate).toLocaleDateString('pt-BR')}`
+          : `Licença ativa! Expira em ${result.expiresIn} dias`;
         carregarLicencas();
-      } catch (err) {
-        console.error('Erro ao validar licença:', err);
-        notify("error", "Erro ao validar licença");
+      } catch {
+        mostrarModalMensagem({ titulo: "Erro", texto: "Erro ao validar licença", tipo: "error" });
       }
     }
 
-    // === Copiar Licença ===
     async function copiarLicenca(licenseKey) {
       try {
         await navigator.clipboard.writeText(licenseKey);
-        notify("success", "Chave da licença copiada!");
-      } catch (err) {
-        console.error('Erro ao copiar licença:', err);
-        notify("error", "Erro ao copiar licença");
+        mostrarModalMensagem({ titulo: "Sucesso", texto: "Chave copiada!", tipo: "success" });
+      } catch {
+        mostrarModalMensagem({ titulo: "Erro", texto: "Falha ao copiar chave", tipo: "error" });
       }
     }
 
-    // === Deletar Licença ===
-    async function deletarLicenca(licenseKey) {
-      if (!confirm('Tem certeza que deseja deletar esta licença?')) return;
-
-      try {
-        const res = await fetch(`${apiUrl}/licenses/${licenseKey}`, { 
-          method: "DELETE" 
-        });
-
-        if (!res.ok) throw new Error(`Erro ${res.status}`);
-
-        notify("success", "Licença deletada com sucesso!");
-        carregarLicencas();
-      } catch (err) {
-        console.error('Erro ao deletar licença:', err);
-        notify("error", "Erro ao deletar licença");
-      }
+    function deletarLicenca(licenseKey) {
+      mostrarModalMensagem({
+        titulo: "Deletar Licença",
+        texto: "Tem certeza que deseja deletar esta licença?",
+        tipo: "warn",
+        confirmacao: true,
+        onConfirm: async () => {
+          try {
+            const res = await fetch(`${apiUrl}/licenses/${licenseKey}`, { method: "DELETE" });
+            if (!res.ok) throw new Error(`Erro ${res.status}`);
+            mostrarModalMensagem({ titulo: "Sucesso", texto: "Licença deletada com sucesso!", tipo: "success" });
+            carregarLicencas();
+          } catch {
+            mostrarModalMensagem({ titulo: "Erro", texto: "Erro ao deletar licença", tipo: "error" });
+          }
+        }
+      });
     }
 
-    // === Inicialização ===
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', () => {
       carregarUsuario();
       carregarAplicacao();
       carregarLicencas();
-      
-      document.getElementById('modalLicenca').addEventListener('click', function(e) {
-        if (e.target === this) fecharModal('modalLicenca');
-      });
     });
+
+    // === MODAL DE MENSAGEM GENÉRICO ===
+    function mostrarModalMensagem({ titulo = "Mensagem", texto = "", tipo = "info", confirmacao = false, onConfirm = null }) {
+      const modal = document.getElementById("modalMensagem");
+      const tituloEl = document.getElementById("modalMensagemTitulo");
+      const textoEl = document.getElementById("modalMensagemTexto");
+      const botoesEl = document.getElementById("modalMensagemBotoes");
+      tituloEl.textContent = titulo;
+      textoEl.textContent = texto;
+      const cores = { success: "#d92628", error: "#d92628", info: "#d92628", warn: "#d92628" };
+      tituloEl.style.color = cores[tipo] || "var(--accent)";
+      botoesEl.innerHTML = "";
+      if (confirmacao) {
+        const btnOk = document.createElement("button");
+        btnOk.className = "btn primary";
+        btnOk.textContent = "Confirmar";
+        btnOk.onclick = () => { fecharModalMensagem(); if (onConfirm) onConfirm(); };
+        const btnCancel = document.createElement("button");
+        btnCancel.className = "btn cancel";
+        btnCancel.textContent = "Cancelar";
+        btnCancel.onclick = fecharModalMensagem;
+        botoesEl.append(btnOk, btnCancel);
+      } else {
+        const btnOk = document.createElement("button");
+        btnOk.className = "btn primary";
+        btnOk.textContent = "OK";
+        btnOk.onclick = fecharModalMensagem;
+        botoesEl.appendChild(btnOk);
+      }
+      modal.classList.add("active");
+    }
+    function fecharModalMensagem() { document.getElementById("modalMensagem").classList.remove("active"); }
   </script>
+  <script src="src/scripts/auth.js"></script>
 
   <style>
-    .form-group {
-      margin-bottom: 15px;
-      text-align: left;
-    }
-
-    .form-group label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: 600;
-      color: var(--text);
-      font-size: 14px;
-    }
-
-    .form-group input {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #333;
-      border-radius: var(--radius);
-      background: var(--hover);
-      color: var(--text);
-      font-size: 14px;
-    }
-
-    .form-group small {
-      display: block;
-      margin-top: 4px;
-      color: var(--muted);
-      font-size: 11px;
-    }
-
-    .modal-content h3 {
-      margin-bottom: 20px;
-      color: var(--accent);
-      text-align: center;
-    }
-
-    .license-status {
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-size: 12px;
-      font-weight: bold;
-      text-transform: uppercase;
-    }
-
+    .form-group { margin-bottom: 15px; text-align: left; }
+    .form-group label { display: block; margin-bottom: 5px; font-weight: 600; color: var(--text); font-size: 14px; }
+    .form-group input { width: 100%; padding: 10px; border: 1px solid #333; border-radius: var(--radius); background: var(--hover); color: var(--text); font-size: 14px; }
+    .form-group small { display: block; margin-top: 4px; color: var(--muted); font-size: 11px; }
+    .modal-content h3 { margin-bottom: 20px; color: var(--accent); text-align: center; }
+    .license-status { padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; text-transform: uppercase; }
     .license-status.inactive { background: #95a5a6; color: white; }
     .license-status.active { background: #27ae60; color: white; }
     .license-status.expired { background: #e74c3c; color: white; }
-
-    .app-tag {
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-size: 12px;
-      font-weight: bold;
-      background: var(--accent);
-      color: white;
-      text-transform: uppercase;
-    }
-
-    code {
-      background: var(--hover);
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-family: monospace;
-      font-size: 12px;
-    }
+    .app-tag { padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; background: var(--accent); color: white; text-transform: uppercase; }
+    code { background: var(--hover); padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 12px; }
   </style>
 </body>
 </html>

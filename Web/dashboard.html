@@ -12,24 +12,26 @@
     <div class="nav">
       <div class="nav-item active">Aplicações</div>
     </div>
-    <div class="footer">
+    <div class="footer" onclick="window.location.href='profile.html'">
       <img id="userAvatar" src="https://res.cloudinary.com/dylkeqcms/image/upload/v1762125098/default_uqhrk3.jpg" alt="Avatar">
       <div class="footer-text">
-        <h3 id="userName">Usuário</h3>
-        <p id="userEmail">email@example.com</p>
+        <h3 id="userName"></h3>
+        <p id="userEmail"></p>
+        <button class="logout-btn" onclick="logout()">Sair</button>
       </div>
     </div>
   </div>
 
   <div class="main">
     <div class="topbar">
-      <h2>Minhas Aplicações</h2>
-      <div class="actions">
-        <button class="btn primary" onclick="abrirModalApp()">+ Nova Aplicação</button>
-      </div>
+      
     </div>
 
     <div class="content">
+      <div class="content-header">
+        <h2>Suas Aplicações</h2>
+        <button class="btn primary" onclick="abrirModalApp()">+ Nova Aplicação</button>
+      </div>
       <div class="apps-container" id="appsContainer">
         <p class="no-data">Carregando aplicações...</p>
       </div>
@@ -235,6 +237,7 @@
       });
     });
   </script>
+  <script src="src/scripts/auth.js"></script>
 
   <style>
     .form-group {

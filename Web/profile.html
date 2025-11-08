@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perfil do Usuário</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .profile-container {
+      max-width: 700px;
+      margin: 0 auto;
+      background: var(--panel);
+      padding: 25px;
+      border-radius: var(--radius);
+      border: 1px solid #1f1f1f;
+    }
+    .profile-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .profile-header img {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--accent);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .profile-header img:hover { opacity: 0.8; }
+    .profile-header h2 {
+      margin: 10px 0 5px;
+      color: var(--text);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .profile-header h2:hover {
+      color: var(--accent);
+    }
+    .profile-header p {
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    .stat {
+      background: var(--hover);
+      border-radius: var(--radius);
+      padding: 15px;
+      text-align: center;
+      border: 1px solid #1f1f1f;
+      transition: var(--transition);
+    }
+    .stat:hover {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: #fff;
+    }
+    .stat h4 {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .stat p {
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    /* === MODAL === */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(3px);
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      animation: fadeIn 0.2s ease;
+    }
+    .modal-content {
+      background: var(--panel);
+      padding: 20px;
+      border-radius: var(--radius);
+      width: 90%;
+      max-width: 400px;
+      border: 1px solid #1f1f1f;
+      text-align: center;
+    }
+    .modal h3 {
+      margin-bottom: 15px;
+      color: var(--text);
+    }
+    .modal input {
+      width: 100%;
+      padding: 8px 10px;
+      background: var(--hover);
+      color: var(--text);
+      border: 1px solid #2a2a2a;
+      border-radius: var(--radius);
+      margin-bottom: 15px;
+    }
+    .modal .btns {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+    .modal .btn {
+      flex: 1;
+      padding: 10px;
+      border-radius: var(--radius);
+      border: none;
+      cursor: pointer;
+      font-weight: 500;
+    }
+    .btn-save {
+      background: var(--accent);
+      color: white;
+    }
+    .btn-cancel {
+      background: var(--hover);
+      color: var(--text);
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .btn {
+      background: var(--accent);
+      color: white;
+      padding: 10px 18px;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+    .btn:hover { opacity: 0.9; }
+
+    .notif-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .notif-msg {
+      padding: 10px 15px;
+      border-radius: var(--radius);
+      font-size: 14px;
+      font-weight: 500;
+      color: #fff;
+      animation: fadeIn 0.3s ease;
+    }
+    .notif-msg.success { background: #00c851; }
+    .notif-msg.error { background: #ff4444; }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <div class="logo"><img src="src/logo.png" style="width: 90%;"></div>
+    <div class="nav"></div>
+    <div class="footer" onclick="window.location.href='profile.html'">
+      <img id="userAvatar" src="https://res.cloudinary.com/dylkeqcms/image/upload/v1762125098/default_uqhrk3.jpg" alt="Avatar">
+      <div class="footer-text">
+        <h3 id="userName">Usuário</h3>
+        <p id="userEmail">email@example.com</p>
+        <button class="logout-btn" onclick="logout()">Sair</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="nav-item" onclick="window.location.href='dashboard.html'">← Voltar</div>
+      <h2>Meu Perfil</h2>
+    </div>
+
+    <div class="content">
+      <div class="profile-container">
+        <div class="profile-header">
+          <input type="file" id="avatarInput" accept="image/*" style="display:none">
+          <img id="profileAvatar" src="" alt="Avatar" title="Clique para alterar foto" onclick="document.getElementById('avatarInput').click()">
+          <h2 id="profileName" onclick="abrirModalNome()">Usuário</h2>
+          <p id="profileEmail">email@example.com</p>
+          <p style="font-size:13px;color:var(--muted);" id="memberSince">Membro desde --/--/----</p>
+        </div>
+
+        <div class="stats">
+          <div class="stat">
+            <h4>Aplicações</h4>
+            <p id="appCount">0</p>
+          </div>
+          <div class="stat">
+            <h4>Licenças Criadas</h4>
+            <p id="licenseCount">0</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- === MODAL DE EDIÇÃO DE NOME === -->
+  <div id="modalNome" class="modal">
+    <div class="modal-content">
+      <h3>Alterar nome</h3>
+      <input type="text" id="novoNome" placeholder="Digite o novo nome">
+      <div class="btns">
+        <button class="btn btn-cancel" onclick="fecharModalNome()">Cancelar</button>
+        <button class="btn btn-save" onclick="salvarNovoNome()">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="notifContainer" class="notif-container"></div>
+
+  <script src="./src/scripts/auth.js"></script>
+  <script>
+    const apiUrl = "http://localhost:3000/api";
+    const userId = localStorage.getItem("userId");
+
+    if (!userId) window.location.href = "index.html";
+
+    async function carregarPerfil() {
+      try {
+        const resUser = await fetch(`${apiUrl}/users/${userId}`);
+        if (!resUser.ok) throw new Error("Usuário não encontrado");
+        const user = await resUser.json();
+
+        document.getElementById("userName").textContent = user.name;
+        document.getElementById("userEmail").textContent = user.email;
+        document.getElementById("userAvatar").src = user.avatarUrl;
+        document.getElementById("profileAvatar").src = user.avatarUrl;
+        document.getElementById("profileName").textContent = user.name;
+        document.getElementById("profileEmail").textContent = user.email;
+        document.getElementById("memberSince").textContent =
+          "Membro desde " + new Date(user.createdAt).toLocaleDateString("pt-BR");
+
+        // APLICAÇÕES
+        const resApps = await fetch(`${apiUrl}/applications?ownerId=${userId}`);
+        const apps = resApps.ok ? await resApps.json() : [];
+        document.getElementById("appCount").textContent = apps.length;
+
+        // LICENÇAS
+        const resLicenses = await fetch(`${apiUrl}/licenses/user/${userId}`);
+        const licenses = resLicenses.ok ? await resLicenses.json() : [];
+        document.getElementById("licenseCount").textContent = licenses.length;
+      } catch (err) {
+        notify("error", "Erro ao carregar perfil.");
+      }
+    }
+
+    function abrirModalNome() {
+      const nomeAtual = document.getElementById("profileName").textContent;
+      document.getElementById("novoNome").value = nomeAtual;
+      document.getElementById("modalNome").style.display = "flex";
+    }
+
+    function fecharModalNome() {
+      document.getElementById("modalNome").style.display = "none";
+    }
+
+    async function salvarNovoNome() {
+      const novoNome = document.getElementById("novoNome").value.trim();
+      if (!novoNome) return notify("error", "O nome não pode ficar vazio.");
+
+      try {
+        const res = await fetch(`${apiUrl}/users/${userId}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name: novoNome })
+        });
+
+        if (!res.ok) {
+          const errData = await res.json();
+          throw new Error(errData.error || "Erro ao salvar alterações");
+        }
+
+        notify("success", "Nome atualizado com sucesso!");
+        fecharModalNome();
+        carregarPerfil();
+      } catch (err) {
+        notify("error", err.message);
+      }
+    }
+
+    function notify(type, message) {
+      const div = document.createElement("div");
+      div.className = `notif-msg ${type}`;
+      div.innerText = message;
+      notifContainer.appendChild(div);
+      setTimeout(() => div.remove(), 4000);
+    }
+
+    document.getElementById("avatarInput").addEventListener("change", async (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = e => document.getElementById("profileAvatar").src = e.target.result;
+      reader.readAsDataURL(file);
+
+      const formData = new FormData();
+      formData.append("avatar", file);
+
+      try {
+        const res = await fetch(`${apiUrl}/users/${userId}/avatar`, {
+          method: "POST",
+          body: formData
+        });
+
+        if (!res.ok) throw new Error("Erro no upload");
+        const data = await res.json();
+
+        document.getElementById("profileAvatar").src = data.avatarUrl;
+        document.getElementById("userAvatar").src = data.avatarUrl;
+        notify("success", "Imagem de perfil atualizada!");
+        carregarPerfil();
+      } catch (err) {
+        notify("error", "Erro ao atualizar imagem de perfil.");
+      }
+    });
+
+    carregarPerfil();
+  </script>
+</body>
+</html>
