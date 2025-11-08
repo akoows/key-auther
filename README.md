@@ -1,4 +1,4 @@
-# 🔑 Key Auther
+# 🔑 KEY AUTHOR
 
 Sistema completo de **autenticação e validação de chaves de licença** via **API e painel web**, desenvolvido para facilitar o controle de acessos, distribuição de licenças e integração com aplicações externas.
 
@@ -17,13 +17,14 @@ O sistema é composto por:
 
 ## 🧰 Tecnologias Utilizadas
 
-**Back-end:**
-- Node.js
-- Express.js
+## Tecnologias
 
-**Front-end:**
-- HTML5, CSS3 e JavaScript
-- Fetch API para comunicação com a API
+| Back-end | Front-end | App |
+|----------|-----------|-----|
+| Node.js | HTML5 | C# |
+| Express.js | CSS3 | XAML |
+| | JavaScript | |
+| | Fetch API | |
 
 ---
 
@@ -40,37 +41,41 @@ O sistema é composto por:
 
 ## 📡 Endpoints da API
 
-### 🔍 Validar Licença
-`POST /api/licenses/:licenseKey/validate`
+## Usuários
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| POST | `/api/users` | Criar usuário |
+| GET | `/api/users` | Listar usuários |
+| GET | `/api/users/:id` | Buscar usuário |
+| POST | `/api/users/login` | Login |
+| PUT | `/api/users/:id` | Atualizar usuário |
+| DELETE | `/api/users/:id` | Deletar usuário |
+| POST | `/api/users/:id/avatar` | Upload avatar |
 
-**Request:**
-```json
-{
-  "appId": "id_da_aplicacao"
-}
-```
+## Licenças
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| POST | `/api/licenses` | Criar licença |
+| POST | `/api/licenses/:licenseKey/validate` | Validar licença |
+| GET | `/api/licenses` | Listar licenças |
+| GET | `/api/licenses/user/:userId` | Licenças do usuário |
+| PATCH | `/api/licenses/:licenseKey` | Atualizar licença |
+| DELETE | `/api/licenses/:licenseKey` | Deletar licença |
 
-**Response:**
-```json
-{
-  "valid": true,
-  "license": {
-    "key": "XXXX-XXXX-XXXX",
-    "expiresAt": "2025-12-01T00:00:00Z"
-  }
-}
-```
-
-**Erros possíveis:**
-- `404` – Licença não encontrada  
-- `403` – Licença expirada  
-- `400` – Dados inválidos  
+## Aplicações
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| POST | `/api/applications` | Criar aplicação |
+| GET | `/api/applications` | Listar aplicações |
+| GET | `/api/applications/:id` | Buscar aplicação |
+| DELETE | `/api/applications/:id` | Deletar aplicação |
+| PUT | `/api/applications/:appId/config` | Atualizar configurações |
 
 ---
 
 ## 🧑‍💻 Autor
 
-Desenvolvido por [**Luis Fernando**](https://github.com/akoows), [**Bruno Santana**](https://github.com/voante10)  
+Desenvolvido por [**Luis Fernando**](https://github.com/akoows), [**Bruno Santana**](https://github.com/voante10), [**Giovana Almeida**](https://www.instagram.com/giyy_allst) e [**Breno Ledo**](https://www.instagram.com/l3do.uwu) 
 💼 Projeto: **Key Author**  
 🔗 Repositório: [github.com/akoows/key-auther](https://github.com/akoows/key-auther)
 
