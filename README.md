@@ -17,8 +17,6 @@ O sistema é composto por:
 
 ## 🧰 Tecnologias Utilizadas
 
-## Tecnologias
-
 | Back-end | Front-end | App |
 |----------|-----------|-----|
 | Node.js | HTML5 | C# |
@@ -83,4 +81,4 @@ Desenvolvido por [**Luis Fernando**](https://github.com/akoows), [**Bruno Santan
 
 ---
 
-> 🔒 **Key Auther** — Segurança, simplicidade e poder em um sistema de autenticação via API.
+> 🔒 **Key Author** — Segurança, simplicidade e poder em um sistema de autenticação via API.
