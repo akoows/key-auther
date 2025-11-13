@@ -1,7 +1,10 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\App",
+    "\\App\\key author",
+    "\\App\\key author\\app principal"
   ],
-  "SelectedNode": "\\C:\\Users\\santa\\Source\\Repos\\key-auther",
+  "SelectedNode": "\\App\\key author\\app principal\\CodeCor.xaml.cs",
   "PreviewInSolutionExplorer": false
 }

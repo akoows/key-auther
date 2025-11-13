@@ -23,5 +23,10 @@ namespace key_author.app_principal
         {
             InitializeComponent();
         }
+
+        private void LogBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
     }
 }

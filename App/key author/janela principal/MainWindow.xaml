@@ -26,20 +26,26 @@
             <RowDefinition Height="200px"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="Auto"/>
+
         </Grid.RowDefinitions>
-        
-        
+
+
         <TextBlock x:Name="benv"
                    Text="Bem vindo!"
                    Foreground="{StaticResource textbrush}"
                    HorizontalAlignment="Center"
                    VerticalAlignment="Center"
+                   FontSize='15'
                    Grid.Row="1"/>
-        <TextBox TextChanged="codegor"
+        <TextBox 
                  x:Name="caixinha"
                  Height="50"
                  Grid.Row="2"
                  Width="200"/>
+
+        <Button x:Name="butaum" Content="Validar" Click="Butaum_click" FontSize="15" Grid.Row="3" HorizontalAlignment="Left" Width="95" Margin="225,15,0,65" Height="50"/>
+        <Button x:Name="butaum2" Content="Logar" Click="Butaum_click2" FontSize="15" Grid.Row="3" HorizontalAlignment="Left" Width="95" Margin="125,15,0,65" Height="50"/>
 
     </Grid>
 </Window>

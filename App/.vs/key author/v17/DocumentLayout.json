@@ -3,19 +3,16 @@
   "WorkspaceRootPath": "C:\\Users\\santa\\source\\repos\\key-auther\\App\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{12068AE3-2419-498D-ABF1-F308BF50362A}|key author\\key author.csproj|c:\\users\\santa\\source\\repos\\key-auther\\app\\key author\\janela principal\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{12068AE3-2419-498D-ABF1-F308BF50362A}|key author\\key author.csproj|solutionrelative:key author\\janela principal\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{12068AE3-2419-498D-ABF1-F308BF50362A}|key author\\key author.csproj|c:\\users\\santa\\source\\repos\\key-auther\\app\\key author\\janela principal\\mainwindow.xaml||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{12068AE3-2419-498D-ABF1-F308BF50362A}|key author\\key author.csproj|solutionrelative:key author\\janela principal\\mainwindow.xaml||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{12068AE3-2419-498D-ABF1-F308BF50362A}|key author\\key author.csproj|c:\\users\\santa\\source\\repos\\key-auther\\app\\key author\\janela principal\\app.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{12068AE3-2419-498D-ABF1-F308BF50362A}|key author\\key author.csproj|solutionrelative:key author\\janela principal\\app.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\santa\\AppData\\Local\\Temp\\.vsdbgsrc\\b49ace08f4cd26a4f275d628999a0f91ccb8a1892704530d9e6f5bd1284082f1\\ResourcePart.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{12068AE3-2419-498D-ABF1-F308BF50362A}|key author\\key author.csproj|c:\\users\\santa\\source\\repos\\key-auther\\app\\key author\\janela principal\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{12068AE3-2419-498D-ABF1-F308BF50362A}|key author\\key author.csproj|solutionrelative:key author\\janela principal\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{12068AE3-2419-498D-ABF1-F308BF50362A}|key author\\key author.csproj|c:\\users\\santa\\source\\repos\\key-auther\\app\\key author\\janela principal\\app.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{12068AE3-2419-498D-ABF1-F308BF50362A}|key author\\key author.csproj|solutionrelative:key author\\janela principal\\app.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -25,57 +22,45 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "MainWindow.xaml",
-              "DocumentMoniker": "C:\\Users\\santa\\Source\\Repos\\key-auther\\App\\key author\\janela principal\\MainWindow.xaml",
-              "RelativeDocumentMoniker": "key author\\janela principal\\MainWindow.xaml",
-              "ToolTip": "C:\\Users\\santa\\Source\\Repos\\key-auther\\App\\key author\\janela principal\\MainWindow.xaml",
-              "RelativeToolTip": "key author\\janela principal\\MainWindow.xaml",
+              "Title": "App.xaml",
+              "DocumentMoniker": "C:\\Users\\santa\\Source\\Repos\\key-auther\\App\\key author\\janela principal\\App.xaml",
+              "RelativeDocumentMoniker": "key author\\janela principal\\App.xaml",
+              "ToolTip": "C:\\Users\\santa\\Source\\Repos\\key-auther\\App\\key author\\janela principal\\App.xaml",
+              "RelativeToolTip": "key author\\janela principal\\App.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2025-11-07T20:44:18.804Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "App.xaml.cs",
-              "DocumentMoniker": "C:\\Users\\santa\\source\\repos\\key-auther\\App\\key author\\janela principal\\App.xaml.cs",
-              "RelativeDocumentMoniker": "key author\\janela principal\\App.xaml.cs",
-              "ToolTip": "C:\\Users\\santa\\source\\repos\\key-auther\\App\\key author\\janela principal\\App.xaml.cs",
-              "RelativeToolTip": "key author\\janela principal\\App.xaml.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-07T20:42:52.216Z",
+              "WhenOpened": "2025-11-13T21:27:09.877Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "App.xaml",
-              "DocumentMoniker": "C:\\Users\\santa\\source\\repos\\key-auther\\App\\key author\\janela principal\\App.xaml",
-              "RelativeDocumentMoniker": "key author\\janela principal\\App.xaml",
-              "ToolTip": "C:\\Users\\santa\\source\\repos\\key-auther\\App\\key author\\janela principal\\App.xaml",
-              "RelativeToolTip": "key author\\janela principal\\App.xaml",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2025-11-07T20:42:35.566Z",
+              "Title": "MainWindow.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\santa\\source\\repos\\key-auther\\App\\key author\\janela principal\\MainWindow.xaml.cs",
+              "RelativeDocumentMoniker": "key author\\janela principal\\MainWindow.xaml.cs",
+              "ToolTip": "C:\\Users\\santa\\source\\repos\\key-auther\\App\\key author\\janela principal\\MainWindow.xaml.cs*",
+              "RelativeToolTip": "key author\\janela principal\\MainWindow.xaml.cs*",
+              "ViewState": "AgIAADAAAAAAAAAAAAAowE0AAAAiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-13T20:59:06.248Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "ResourcePart.cs",
-              "DocumentMoniker": "C:\\Users\\santa\\AppData\\Local\\Temp\\.vsdbgsrc\\b49ace08f4cd26a4f275d628999a0f91ccb8a1892704530d9e6f5bd1284082f1\\ResourcePart.cs",
-              "RelativeDocumentMoniker": "..\\..\\..\\..\\AppData\\Local\\Temp\\.vsdbgsrc\\b49ace08f4cd26a4f275d628999a0f91ccb8a1892704530d9e6f5bd1284082f1\\ResourcePart.cs",
-              "ToolTip": "C:\\Users\\santa\\AppData\\Local\\Temp\\.vsdbgsrc\\b49ace08f4cd26a4f275d628999a0f91ccb8a1892704530d9e6f5bd1284082f1\\ResourcePart.cs [Somente Leitura]",
-              "RelativeToolTip": "..\\..\\..\\..\\AppData\\Local\\Temp\\.vsdbgsrc\\b49ace08f4cd26a4f275d628999a0f91ccb8a1892704530d9e6f5bd1284082f1\\ResourcePart.cs [Somente Leitura]",
-              "ViewState": "AgIAACQAAAAAAAAAAAAAACcAAAAEAAAAAQAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-07T20:47:49.251Z",
-              "EditorCaption": " [Somente Leitura]"
+              "Title": "MainWindow.xaml",
+              "DocumentMoniker": "C:\\Users\\santa\\source\\repos\\key-auther\\App\\key author\\janela principal\\MainWindow.xaml",
+              "RelativeDocumentMoniker": "key author\\janela principal\\MainWindow.xaml",
+              "ToolTip": "C:\\Users\\santa\\source\\repos\\key-auther\\App\\key author\\janela principal\\MainWindow.xaml*",
+              "RelativeToolTip": "key author\\janela principal\\MainWindow.xaml*",
+              "ViewState": "AgIAACMAAAAAAAAAAAAgwC8AAABFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-11-13T21:03:00.747Z",
+              "EditorCaption": ""
             }
           ]
         }
