@@ -77,7 +77,7 @@ Desenvolvido por [**Luis Fernando**](https://github.com/akoows), [**Bruno Santan
 
 💼 Site: [**Key Author**](https://akoows.github.io/keyauthor)  
 
-🔗 Repositório: [github.com/akoows/key-auther](https://github.com/akoows/key-auther)
+🔗 Repositório: [github.com/akoows/key-auther](https://github.com/akoows/key-auther), [github.com/akoows/keyauthor](https://github.com/akoows/keyauthor)
 
 ---
 
