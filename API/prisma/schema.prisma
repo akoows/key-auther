@@ -1,0 +1,37 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "mongodb"
+  url = env("DATABASE_URL")
+}
+
+model User {
+  id             String        @id @default(auto()) @map("_id") @db.ObjectId
+  name           String
+  email          String        @unique
+  pass           String
+  avatarUrl      String        @default("https://res.cloudinary.com/dylkeqcms/image/upload/v1762125098/default_uqhrk3.jpg")
+  createdAt      DateTime      @default(now())
+
+  applicationIDs String[]      @db.ObjectId
+  applications   Application[] @relation("ApplicationOwners", fields: [applicationIDs], references: [id])
+}
+
+model Application {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  image     String
+  config    Json
+  createdAt DateTime @default(now())
+
+  ownerIDs  String[] @db.ObjectId
+  owners    User[]   @relation("ApplicationOwners", fields: [ownerIDs], references: [id])
+}

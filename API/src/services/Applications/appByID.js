@@ -1,7 +1,13 @@
-const { application } = validateApplicationExists(req.params.id);
-    
+import { prisma } from "../lib/prisma.js";
+
+export async function getById(id) {
+    const application = await prisma.application.findUnique({
+        where: { id },
+    });
+
     if (!application) {
-        return res.status(404).json({ error: 'Aplicação não encontrada' });
+        throw new Error("Aplicação não encontrada!");
     }
-    
-    res.json(application);
+
+    return application;
+}

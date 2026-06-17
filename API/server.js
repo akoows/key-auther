@@ -1,11 +1,11 @@
 // BIBLIOTECAS 
-const express = require('express');
-const cors = require('cors');
-const multer = require('multer');
-const cloudinary = require('cloudinary').v2;
-const stream = require('stream');
-const process = require('process');
-const bcrypt = require('bcrypt');
+import { express } from "express";
+import { cors } from "cors";
+import { multer } from "multer"
+import { cloudinary } from "cloudinary";
+import { stream } from "stream";
+import { process } from "process";
+import { bcrypt } from "bcrypt";
 
 // CONFIGURAÇÃO DO CLOUDINARY
 cloudinary.config({ 
@@ -32,50 +32,6 @@ const upload = multer({ storage: multer.memoryStorage() });
 // ==============================
 // MIDDLEWARES AUXILIARES
 // ==============================
-
-const validateUserExists = (userId) => {
-    const user = users.find(u => u.id === parseInt(userId));
-    return { user, exists: !!user };
-};
-
-const validateApplicationExists = (appId) => {
-    const application = applications.find(a => a.id === parseInt(appId));
-    return { application, exists: !!application };
-};
-
-const validateLicenseExists = (licenseKey) => {
-    const license = licenses.find(l => l.licenseKey === licenseKey);
-    return { license, exists: !!license };
-};
-
-// ==============================
-// ROTAS DE APLICAÇÕES
-// ==============================
-
-// === CRIAR APLICAÇÃO ===
-app.post('/api/applications', upload.single('image'), async (req, res) => {
-    
-});
-
-// === LISTAR APLICAÇÕES ===
-app.get('/api/applications', (req, res) => {
-    
-});
-
-// === OBTER APLICAÇÃO POR ID ===
-app.get('/api/applications/:id', (req, res) => {
-    
-});
-
-// === DELETAR APLICAÇÃO ===
-app.delete('/api/applications/:id', (req, res) => {
-    
-});
-
-// === ATUALIZAR CONFIGURAÇÕES DE UMA APLICAÇÃO ===
-app.put('/api/applications/:appId/config', (req, res) => {
-  
-});
 
 
 // ==============================

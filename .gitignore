@@ -1,2 +1,6 @@
 ﻿.env
 /App/.vs/key author/FileContentIndex
+
+/app/generated/prisma
+node_modules
+/API/node_modules

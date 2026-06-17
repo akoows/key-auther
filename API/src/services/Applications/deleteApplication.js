@@ -1,9 +1,13 @@
-const { application, exists } = validateApplicationExists(req.params.id);
-    
-    if (!exists) {
-        return res.status(404).json({ error: 'Aplicação não encontrada' });
+export async function remove(id) {
+    const application = await prisma.application.findUnique({
+        where: { id },
+    });
+
+    if (!application) {
+        throw new Error("Aplicação não encontrada!");
     }
 
-    const index = applications.findIndex(a => a.id === application.id);
-    applications.splice(index, 1);
-    res.status(204).send();
+    await prisma.application.delete({
+        where: { id },
+    });
+}

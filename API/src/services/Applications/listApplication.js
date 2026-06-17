@@ -1,11 +1,11 @@
-const { ownerId } = req.query;
-    
+export async function getAll(ownerId) {
     if (ownerId) {
-        const userId = parseInt(ownerId);
-        const userApplications = applications.filter(app => 
-            app.ownerID.includes(userId)
-        );
-        return res.json(userApplications);
+        return await prisma.application.findMany({
+            where: {
+                ownerIDs: { has: ownerId },
+            },
+        });
     }
-    
-    res.json(applications);
+
+    return await prisma.application.findMany();
+}

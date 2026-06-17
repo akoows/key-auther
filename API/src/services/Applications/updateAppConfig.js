@@ -1,20 +1,26 @@
-const { appId } = req.params;
-  const { tag, default_duration } = req.body;
+export async function updateConfig(id, { tag, default_duration }) {
+    if (!tag || !default_duration || isNaN(default_duration)) {
+        throw new Error("Campos inválidos.");
+    }
 
-  if (!tag || !default_duration || isNaN(default_duration)) {
-    return res.status(400).json({ error: 'Campos inválidos.' });
-  };
+    const application = await prisma.application.findUnique({
+        where: { id },
+    });
 
-  const appIndex = applications.findIndex(a => a.id === parseInt(appId));
+    if (!application) {
+        throw new Error("Aplicação não encontrada!");
+    }
 
-  if (appIndex === -1) {
-    return res.status(404).json({ error: 'Aplicação não encontrada.' });
-  }
+    const updated = await prisma.application.update({
+        where: { id },
+        data: {
+            config: {
+                ...application.config,
+                tag,
+                default_duration: parseInt(default_duration),
+            },
+        },
+    });
 
-  applications[appIndex].config.tag = tag;
-  applications[appIndex].config.default_duration = parseInt(default_duration);
-
-  res.json({
-    message: 'Configurações atualizadas com sucesso.',
-    updatedApp: applications[appIndex]
-  });
+    return updated;
+}
