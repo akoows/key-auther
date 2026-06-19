@@ -32,6 +32,18 @@ model Application {
   config    Json
   createdAt DateTime @default(now())
 
+  licenses String[] @db.ObjectId
+  licensesKey  Licenses[]   @relation("LicenseOwners", fields: [licenses], references: [key])
+
   ownerIDs  String[] @db.ObjectId
   owners    User[]   @relation("ApplicationOwners", fields: [ownerIDs], references: [id])
 }
+
+model Licenses {
+  key         String      @id @default(auto()) @map("_id") @db.ObjectId
+  duration    DateTime    
+  createdAt   DateTime    @default(now())
+
+  licensesOwnerID String[] @db.ObjectId
+  licensesOwners  Application[]   @relation("LicenseOwners", fields: [licensesOwnerID], references: [id])
+  }

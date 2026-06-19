@@ -2,7 +2,7 @@ import { prisma } from "../lib/prisma.js";
 
 export async function getById(id) {
     const application = await prisma.application.findUnique({
-        where: { id },
+        where: { licensesOwnerID }
     });
 
     if (!application) {

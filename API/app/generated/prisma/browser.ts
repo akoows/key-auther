@@ -27,3 +27,8 @@ export type User = Prisma.UserModel
  * 
  */
 export type Application = Prisma.ApplicationModel
+/**
+ * Model Licenses
+ * 
+ */
+export type Licenses = Prisma.LicensesModel

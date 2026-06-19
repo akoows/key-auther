@@ -10,4 +10,5 @@
  */
 export type * from './models/User.ts'
 export type * from './models/Application.ts'
+export type * from './models/Licenses.ts'
 export type * from './commonInputTypes.ts'

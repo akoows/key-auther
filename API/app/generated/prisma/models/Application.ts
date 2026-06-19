@@ -44,6 +44,7 @@ export type ApplicationCountAggregateOutputType = {
   image: number
   config: number
   createdAt: number
+  licenses: number
   ownerIDs: number
   _all: number
 }
@@ -69,6 +70,7 @@ export type ApplicationCountAggregateInputType = {
   image?: true
   config?: true
   createdAt?: true
+  licenses?: true
   ownerIDs?: true
   _all?: true
 }
@@ -151,6 +153,7 @@ export type ApplicationGroupByOutputType = {
   image: string
   config: runtime.JsonValue
   createdAt: Date
+  licenses: string[]
   ownerIDs: string[]
   _count: ApplicationCountAggregateOutputType | null
   _min: ApplicationMinAggregateOutputType | null
@@ -181,7 +184,9 @@ export type ApplicationWhereInput = {
   image?: Prisma.StringFilter<"Application"> | string
   config?: Prisma.JsonFilter<"Application">
   createdAt?: Prisma.DateTimeFilter<"Application"> | Date | string
+  licenses?: Prisma.StringNullableListFilter<"Application">
   ownerIDs?: Prisma.StringNullableListFilter<"Application">
+  licensesKey?: Prisma.LicensesListRelationFilter
   owners?: Prisma.UserListRelationFilter
 }
 
@@ -191,7 +196,9 @@ export type ApplicationOrderByWithRelationInput = {
   image?: Prisma.SortOrder
   config?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  licenses?: Prisma.SortOrder
   ownerIDs?: Prisma.SortOrder
+  licensesKey?: Prisma.LicensesOrderByRelationAggregateInput
   owners?: Prisma.UserOrderByRelationAggregateInput
 }
 
@@ -204,7 +211,9 @@ export type ApplicationWhereUniqueInput = Prisma.AtLeast<{
   image?: Prisma.StringFilter<"Application"> | string
   config?: Prisma.JsonFilter<"Application">
   createdAt?: Prisma.DateTimeFilter<"Application"> | Date | string
+  licenses?: Prisma.StringNullableListFilter<"Application">
   ownerIDs?: Prisma.StringNullableListFilter<"Application">
+  licensesKey?: Prisma.LicensesListRelationFilter
   owners?: Prisma.UserListRelationFilter
 }, "id">
 
@@ -214,6 +223,7 @@ export type ApplicationOrderByWithAggregationInput = {
   image?: Prisma.SortOrder
   config?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  licenses?: Prisma.SortOrder
   ownerIDs?: Prisma.SortOrder
   _count?: Prisma.ApplicationCountOrderByAggregateInput
   _max?: Prisma.ApplicationMaxOrderByAggregateInput
@@ -229,6 +239,7 @@ export type ApplicationScalarWhereWithAggregatesInput = {
   image?: Prisma.StringWithAggregatesFilter<"Application"> | string
   config?: Prisma.JsonWithAggregatesFilter<"Application">
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Application"> | Date | string
+  licenses?: Prisma.StringNullableListFilter<"Application">
   ownerIDs?: Prisma.StringNullableListFilter<"Application">
 }
 
@@ -238,6 +249,7 @@ export type ApplicationCreateInput = {
   image: string
   config: runtime.InputJsonValue
   createdAt?: Date | string
+  licensesKey?: Prisma.LicensesCreateNestedManyWithoutLicensesOwnersInput
   owners?: Prisma.UserCreateNestedManyWithoutApplicationsInput
 }
 
@@ -247,7 +259,9 @@ export type ApplicationUncheckedCreateInput = {
   image: string
   config: runtime.InputJsonValue
   createdAt?: Date | string
+  licenses?: Prisma.ApplicationCreatelicensesInput | string[]
   ownerIDs?: Prisma.ApplicationCreateownerIDsInput | string[]
+  licensesKey?: Prisma.LicensesUncheckedCreateNestedManyWithoutLicensesOwnersInput
   owners?: Prisma.UserUncheckedCreateNestedManyWithoutApplicationsInput
 }
 
@@ -256,6 +270,7 @@ export type ApplicationUpdateInput = {
   image?: Prisma.StringFieldUpdateOperationsInput | string
   config?: runtime.InputJsonValue | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  licensesKey?: Prisma.LicensesUpdateManyWithoutLicensesOwnersNestedInput
   owners?: Prisma.UserUpdateManyWithoutApplicationsNestedInput
 }
 
@@ -264,7 +279,9 @@ export type ApplicationUncheckedUpdateInput = {
   image?: Prisma.StringFieldUpdateOperationsInput | string
   config?: runtime.InputJsonValue | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  licenses?: Prisma.ApplicationUpdatelicensesInput | string[]
   ownerIDs?: Prisma.ApplicationUpdateownerIDsInput | string[]
+  licensesKey?: Prisma.LicensesUncheckedUpdateManyWithoutLicensesOwnersNestedInput
   owners?: Prisma.UserUncheckedUpdateManyWithoutApplicationsNestedInput
 }
 
@@ -274,6 +291,7 @@ export type ApplicationCreateManyInput = {
   image: string
   config: runtime.InputJsonValue
   createdAt?: Date | string
+  licenses?: Prisma.ApplicationCreatelicensesInput | string[]
   ownerIDs?: Prisma.ApplicationCreateownerIDsInput | string[]
 }
 
@@ -289,6 +307,7 @@ export type ApplicationUncheckedUpdateManyInput = {
   image?: Prisma.StringFieldUpdateOperationsInput | string
   config?: runtime.InputJsonValue | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  licenses?: Prisma.ApplicationUpdatelicensesInput | string[]
   ownerIDs?: Prisma.ApplicationUpdateownerIDsInput | string[]
 }
 
@@ -308,6 +327,7 @@ export type ApplicationCountOrderByAggregateInput = {
   image?: Prisma.SortOrder
   config?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  licenses?: Prisma.SortOrder
   ownerIDs?: Prisma.SortOrder
 }
 
@@ -363,13 +383,60 @@ export type ApplicationUncheckedUpdateManyWithoutOwnersNestedInput = {
   deleteMany?: Prisma.ApplicationScalarWhereInput | Prisma.ApplicationScalarWhereInput[]
 }
 
+export type ApplicationCreatelicensesInput = {
+  set: string[]
+}
+
 export type ApplicationCreateownerIDsInput = {
   set: string[]
+}
+
+export type ApplicationUpdatelicensesInput = {
+  set?: string[]
+  push?: string | string[]
 }
 
 export type ApplicationUpdateownerIDsInput = {
   set?: string[]
   push?: string | string[]
+}
+
+export type ApplicationCreateNestedManyWithoutLicensesKeyInput = {
+  create?: Prisma.XOR<Prisma.ApplicationCreateWithoutLicensesKeyInput, Prisma.ApplicationUncheckedCreateWithoutLicensesKeyInput> | Prisma.ApplicationCreateWithoutLicensesKeyInput[] | Prisma.ApplicationUncheckedCreateWithoutLicensesKeyInput[]
+  connectOrCreate?: Prisma.ApplicationCreateOrConnectWithoutLicensesKeyInput | Prisma.ApplicationCreateOrConnectWithoutLicensesKeyInput[]
+  connect?: Prisma.ApplicationWhereUniqueInput | Prisma.ApplicationWhereUniqueInput[]
+}
+
+export type ApplicationUncheckedCreateNestedManyWithoutLicensesKeyInput = {
+  create?: Prisma.XOR<Prisma.ApplicationCreateWithoutLicensesKeyInput, Prisma.ApplicationUncheckedCreateWithoutLicensesKeyInput> | Prisma.ApplicationCreateWithoutLicensesKeyInput[] | Prisma.ApplicationUncheckedCreateWithoutLicensesKeyInput[]
+  connectOrCreate?: Prisma.ApplicationCreateOrConnectWithoutLicensesKeyInput | Prisma.ApplicationCreateOrConnectWithoutLicensesKeyInput[]
+  connect?: Prisma.ApplicationWhereUniqueInput | Prisma.ApplicationWhereUniqueInput[]
+}
+
+export type ApplicationUpdateManyWithoutLicensesKeyNestedInput = {
+  create?: Prisma.XOR<Prisma.ApplicationCreateWithoutLicensesKeyInput, Prisma.ApplicationUncheckedCreateWithoutLicensesKeyInput> | Prisma.ApplicationCreateWithoutLicensesKeyInput[] | Prisma.ApplicationUncheckedCreateWithoutLicensesKeyInput[]
+  connectOrCreate?: Prisma.ApplicationCreateOrConnectWithoutLicensesKeyInput | Prisma.ApplicationCreateOrConnectWithoutLicensesKeyInput[]
+  upsert?: Prisma.ApplicationUpsertWithWhereUniqueWithoutLicensesKeyInput | Prisma.ApplicationUpsertWithWhereUniqueWithoutLicensesKeyInput[]
+  set?: Prisma.ApplicationWhereUniqueInput | Prisma.ApplicationWhereUniqueInput[]
+  disconnect?: Prisma.ApplicationWhereUniqueInput | Prisma.ApplicationWhereUniqueInput[]
+  delete?: Prisma.ApplicationWhereUniqueInput | Prisma.ApplicationWhereUniqueInput[]
+  connect?: Prisma.ApplicationWhereUniqueInput | Prisma.ApplicationWhereUniqueInput[]
+  update?: Prisma.ApplicationUpdateWithWhereUniqueWithoutLicensesKeyInput | Prisma.ApplicationUpdateWithWhereUniqueWithoutLicensesKeyInput[]
+  updateMany?: Prisma.ApplicationUpdateManyWithWhereWithoutLicensesKeyInput | Prisma.ApplicationUpdateManyWithWhereWithoutLicensesKeyInput[]
+  deleteMany?: Prisma.ApplicationScalarWhereInput | Prisma.ApplicationScalarWhereInput[]
+}
+
+export type ApplicationUncheckedUpdateManyWithoutLicensesKeyNestedInput = {
+  create?: Prisma.XOR<Prisma.ApplicationCreateWithoutLicensesKeyInput, Prisma.ApplicationUncheckedCreateWithoutLicensesKeyInput> | Prisma.ApplicationCreateWithoutLicensesKeyInput[] | Prisma.ApplicationUncheckedCreateWithoutLicensesKeyInput[]
+  connectOrCreate?: Prisma.ApplicationCreateOrConnectWithoutLicensesKeyInput | Prisma.ApplicationCreateOrConnectWithoutLicensesKeyInput[]
+  upsert?: Prisma.ApplicationUpsertWithWhereUniqueWithoutLicensesKeyInput | Prisma.ApplicationUpsertWithWhereUniqueWithoutLicensesKeyInput[]
+  set?: Prisma.ApplicationWhereUniqueInput | Prisma.ApplicationWhereUniqueInput[]
+  disconnect?: Prisma.ApplicationWhereUniqueInput | Prisma.ApplicationWhereUniqueInput[]
+  delete?: Prisma.ApplicationWhereUniqueInput | Prisma.ApplicationWhereUniqueInput[]
+  connect?: Prisma.ApplicationWhereUniqueInput | Prisma.ApplicationWhereUniqueInput[]
+  update?: Prisma.ApplicationUpdateWithWhereUniqueWithoutLicensesKeyInput | Prisma.ApplicationUpdateWithWhereUniqueWithoutLicensesKeyInput[]
+  updateMany?: Prisma.ApplicationUpdateManyWithWhereWithoutLicensesKeyInput | Prisma.ApplicationUpdateManyWithWhereWithoutLicensesKeyInput[]
+  deleteMany?: Prisma.ApplicationScalarWhereInput | Prisma.ApplicationScalarWhereInput[]
 }
 
 export type ApplicationCreateWithoutOwnersInput = {
@@ -378,6 +445,7 @@ export type ApplicationCreateWithoutOwnersInput = {
   image: string
   config: runtime.InputJsonValue
   createdAt?: Date | string
+  licensesKey?: Prisma.LicensesCreateNestedManyWithoutLicensesOwnersInput
 }
 
 export type ApplicationUncheckedCreateWithoutOwnersInput = {
@@ -386,7 +454,9 @@ export type ApplicationUncheckedCreateWithoutOwnersInput = {
   image: string
   config: runtime.InputJsonValue
   createdAt?: Date | string
+  licenses?: Prisma.ApplicationCreatelicensesInput | string[]
   ownerIDs?: Prisma.ApplicationCreateownerIDsInput | string[]
+  licensesKey?: Prisma.LicensesUncheckedCreateNestedManyWithoutLicensesOwnersInput
 }
 
 export type ApplicationCreateOrConnectWithoutOwnersInput = {
@@ -419,7 +489,49 @@ export type ApplicationScalarWhereInput = {
   image?: Prisma.StringFilter<"Application"> | string
   config?: Prisma.JsonFilter<"Application">
   createdAt?: Prisma.DateTimeFilter<"Application"> | Date | string
+  licenses?: Prisma.StringNullableListFilter<"Application">
   ownerIDs?: Prisma.StringNullableListFilter<"Application">
+}
+
+export type ApplicationCreateWithoutLicensesKeyInput = {
+  id?: string
+  name: string
+  image: string
+  config: runtime.InputJsonValue
+  createdAt?: Date | string
+  owners?: Prisma.UserCreateNestedManyWithoutApplicationsInput
+}
+
+export type ApplicationUncheckedCreateWithoutLicensesKeyInput = {
+  id?: string
+  name: string
+  image: string
+  config: runtime.InputJsonValue
+  createdAt?: Date | string
+  licenses?: Prisma.ApplicationCreatelicensesInput | string[]
+  ownerIDs?: Prisma.ApplicationCreateownerIDsInput | string[]
+  owners?: Prisma.UserUncheckedCreateNestedManyWithoutApplicationsInput
+}
+
+export type ApplicationCreateOrConnectWithoutLicensesKeyInput = {
+  where: Prisma.ApplicationWhereUniqueInput
+  create: Prisma.XOR<Prisma.ApplicationCreateWithoutLicensesKeyInput, Prisma.ApplicationUncheckedCreateWithoutLicensesKeyInput>
+}
+
+export type ApplicationUpsertWithWhereUniqueWithoutLicensesKeyInput = {
+  where: Prisma.ApplicationWhereUniqueInput
+  update: Prisma.XOR<Prisma.ApplicationUpdateWithoutLicensesKeyInput, Prisma.ApplicationUncheckedUpdateWithoutLicensesKeyInput>
+  create: Prisma.XOR<Prisma.ApplicationCreateWithoutLicensesKeyInput, Prisma.ApplicationUncheckedCreateWithoutLicensesKeyInput>
+}
+
+export type ApplicationUpdateWithWhereUniqueWithoutLicensesKeyInput = {
+  where: Prisma.ApplicationWhereUniqueInput
+  data: Prisma.XOR<Prisma.ApplicationUpdateWithoutLicensesKeyInput, Prisma.ApplicationUncheckedUpdateWithoutLicensesKeyInput>
+}
+
+export type ApplicationUpdateManyWithWhereWithoutLicensesKeyInput = {
+  where: Prisma.ApplicationScalarWhereInput
+  data: Prisma.XOR<Prisma.ApplicationUpdateManyMutationInput, Prisma.ApplicationUncheckedUpdateManyWithoutLicensesKeyInput>
 }
 
 export type ApplicationUpdateWithoutOwnersInput = {
@@ -427,6 +539,7 @@ export type ApplicationUpdateWithoutOwnersInput = {
   image?: Prisma.StringFieldUpdateOperationsInput | string
   config?: runtime.InputJsonValue | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  licensesKey?: Prisma.LicensesUpdateManyWithoutLicensesOwnersNestedInput
 }
 
 export type ApplicationUncheckedUpdateWithoutOwnersInput = {
@@ -434,7 +547,9 @@ export type ApplicationUncheckedUpdateWithoutOwnersInput = {
   image?: Prisma.StringFieldUpdateOperationsInput | string
   config?: runtime.InputJsonValue | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  licenses?: Prisma.ApplicationUpdatelicensesInput | string[]
   ownerIDs?: Prisma.ApplicationUpdateownerIDsInput | string[]
+  licensesKey?: Prisma.LicensesUncheckedUpdateManyWithoutLicensesOwnersNestedInput
 }
 
 export type ApplicationUncheckedUpdateManyWithoutOwnersInput = {
@@ -442,6 +557,34 @@ export type ApplicationUncheckedUpdateManyWithoutOwnersInput = {
   image?: Prisma.StringFieldUpdateOperationsInput | string
   config?: runtime.InputJsonValue | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  licenses?: Prisma.ApplicationUpdatelicensesInput | string[]
+  ownerIDs?: Prisma.ApplicationUpdateownerIDsInput | string[]
+}
+
+export type ApplicationUpdateWithoutLicensesKeyInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.StringFieldUpdateOperationsInput | string
+  config?: runtime.InputJsonValue | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  owners?: Prisma.UserUpdateManyWithoutApplicationsNestedInput
+}
+
+export type ApplicationUncheckedUpdateWithoutLicensesKeyInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.StringFieldUpdateOperationsInput | string
+  config?: runtime.InputJsonValue | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  licenses?: Prisma.ApplicationUpdatelicensesInput | string[]
+  ownerIDs?: Prisma.ApplicationUpdateownerIDsInput | string[]
+  owners?: Prisma.UserUncheckedUpdateManyWithoutApplicationsNestedInput
+}
+
+export type ApplicationUncheckedUpdateManyWithoutLicensesKeyInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.StringFieldUpdateOperationsInput | string
+  config?: runtime.InputJsonValue | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  licenses?: Prisma.ApplicationUpdatelicensesInput | string[]
   ownerIDs?: Prisma.ApplicationUpdateownerIDsInput | string[]
 }
 
@@ -451,10 +594,12 @@ export type ApplicationUncheckedUpdateManyWithoutOwnersInput = {
  */
 
 export type ApplicationCountOutputType = {
+  licensesKey: number
   owners: number
 }
 
 export type ApplicationCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  licensesKey?: boolean | ApplicationCountOutputTypeCountLicensesKeyArgs
   owners?: boolean | ApplicationCountOutputTypeCountOwnersArgs
 }
 
@@ -471,6 +616,13 @@ export type ApplicationCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.
 /**
  * ApplicationCountOutputType without action
  */
+export type ApplicationCountOutputTypeCountLicensesKeyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LicensesWhereInput
+}
+
+/**
+ * ApplicationCountOutputType without action
+ */
 export type ApplicationCountOutputTypeCountOwnersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.UserWhereInput
 }
@@ -482,7 +634,9 @@ export type ApplicationSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   image?: boolean
   config?: boolean
   createdAt?: boolean
+  licenses?: boolean
   ownerIDs?: boolean
+  licensesKey?: boolean | Prisma.Application$licensesKeyArgs<ExtArgs>
   owners?: boolean | Prisma.Application$ownersArgs<ExtArgs>
   _count?: boolean | Prisma.ApplicationCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["application"]>
@@ -495,11 +649,13 @@ export type ApplicationSelectScalar = {
   image?: boolean
   config?: boolean
   createdAt?: boolean
+  licenses?: boolean
   ownerIDs?: boolean
 }
 
-export type ApplicationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "image" | "config" | "createdAt" | "ownerIDs", ExtArgs["result"]["application"]>
+export type ApplicationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "image" | "config" | "createdAt" | "licenses" | "ownerIDs", ExtArgs["result"]["application"]>
 export type ApplicationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  licensesKey?: boolean | Prisma.Application$licensesKeyArgs<ExtArgs>
   owners?: boolean | Prisma.Application$ownersArgs<ExtArgs>
   _count?: boolean | Prisma.ApplicationCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -507,6 +663,7 @@ export type ApplicationInclude<ExtArgs extends runtime.Types.Extensions.Internal
 export type $ApplicationPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Application"
   objects: {
+    licensesKey: Prisma.$LicensesPayload<ExtArgs>[]
     owners: Prisma.$UserPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -515,6 +672,7 @@ export type $ApplicationPayload<ExtArgs extends runtime.Types.Extensions.Interna
     image: string
     config: runtime.JsonValue
     createdAt: Date
+    licenses: string[]
     ownerIDs: string[]
   }, ExtArgs["result"]["application"]>
   composites: {}
@@ -879,6 +1037,7 @@ readonly fields: ApplicationFieldRefs;
  */
 export interface Prisma__ApplicationClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  licensesKey<T extends Prisma.Application$licensesKeyArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Application$licensesKeyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LicensesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   owners<T extends Prisma.Application$ownersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Application$ownersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -914,6 +1073,7 @@ export interface ApplicationFieldRefs {
   readonly image: Prisma.FieldRef<"Application", 'String'>
   readonly config: Prisma.FieldRef<"Application", 'Json'>
   readonly createdAt: Prisma.FieldRef<"Application", 'DateTime'>
+  readonly licenses: Prisma.FieldRef<"Application", 'String[]'>
   readonly ownerIDs: Prisma.FieldRef<"Application", 'String[]'>
 }
     
@@ -1282,6 +1442,30 @@ export type ApplicationAggregateRawArgs<ExtArgs extends runtime.Types.Extensions
    * Additional options to pass to the `aggregate` command ${@link https://docs.mongodb.com/manual/reference/command/aggregate/#command-fields MongoDB Docs}.
    */
   options?: runtime.InputJsonValue
+}
+
+/**
+ * Application.licensesKey
+ */
+export type Application$licensesKeyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Licenses
+   */
+  select?: Prisma.LicensesSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Licenses
+   */
+  omit?: Prisma.LicensesOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LicensesInclude<ExtArgs> | null
+  where?: Prisma.LicensesWhereInput
+  orderBy?: Prisma.LicensesOrderByWithRelationInput | Prisma.LicensesOrderByWithRelationInput[]
+  cursor?: Prisma.LicensesWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.LicensesScalarFieldEnum | Prisma.LicensesScalarFieldEnum[]
 }
 
 /**

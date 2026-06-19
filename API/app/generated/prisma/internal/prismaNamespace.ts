@@ -391,7 +391,8 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   User: 'User',
-  Application: 'Application'
+  Application: 'Application',
+  Licenses: 'Licenses'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -407,7 +408,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "application"
+    modelProps: "user" | "application" | "licenses"
     txIsolationLevel: never
   }
   model: {
@@ -559,6 +560,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Licenses: {
+      payload: Prisma.$LicensesPayload<ExtArgs>
+      fields: Prisma.LicensesFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.LicensesFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LicensesPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.LicensesFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LicensesPayload>
+        }
+        findFirst: {
+          args: Prisma.LicensesFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LicensesPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.LicensesFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LicensesPayload>
+        }
+        findMany: {
+          args: Prisma.LicensesFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LicensesPayload>[]
+        }
+        create: {
+          args: Prisma.LicensesCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LicensesPayload>
+        }
+        createMany: {
+          args: Prisma.LicensesCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.LicensesDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LicensesPayload>
+        }
+        update: {
+          args: Prisma.LicensesUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LicensesPayload>
+        }
+        deleteMany: {
+          args: Prisma.LicensesDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.LicensesUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.LicensesUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LicensesPayload>
+        }
+        aggregate: {
+          args: Prisma.LicensesAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateLicenses>
+        }
+        groupBy: {
+          args: Prisma.LicensesGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LicensesGroupByOutputType>[]
+        }
+        findRaw: {
+          args: Prisma.LicensesFindRawArgs<ExtArgs>
+          result: Prisma.JsonObject
+        }
+        aggregateRaw: {
+          args: Prisma.LicensesAggregateRawArgs<ExtArgs>
+          result: Prisma.JsonObject
+        }
+        count: {
+          args: Prisma.LicensesCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LicensesCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -595,10 +670,21 @@ export const ApplicationScalarFieldEnum = {
   image: 'image',
   config: 'config',
   createdAt: 'createdAt',
+  licenses: 'licenses',
   ownerIDs: 'ownerIDs'
 } as const
 
 export type ApplicationScalarFieldEnum = (typeof ApplicationScalarFieldEnum)[keyof typeof ApplicationScalarFieldEnum]
+
+
+export const LicensesScalarFieldEnum = {
+  key: 'key',
+  duration: 'duration',
+  createdAt: 'createdAt',
+  licensesOwnerID: 'licensesOwnerID'
+} as const
+
+export type LicensesScalarFieldEnum = (typeof LicensesScalarFieldEnum)[keyof typeof LicensesScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -759,6 +845,7 @@ export interface PrismaClientOptions {
 export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
   application?: Prisma.ApplicationOmit
+  licenses?: Prisma.LicensesOmit
 }
 
 /* Types for Logging */
