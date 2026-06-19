@@ -89,6 +89,8 @@ export type ApplicationScalarFieldEnum = (typeof ApplicationScalarFieldEnum)[key
 export const LicensesScalarFieldEnum = {
   key: 'key',
   duration: 'duration',
+  activadetAt: 'activadetAt',
+  status: 'status',
   createdAt: 'createdAt',
   licensesOwnerID: 'licensesOwnerID'
 } as const

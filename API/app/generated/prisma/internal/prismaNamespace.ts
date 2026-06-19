@@ -680,6 +680,8 @@ export type ApplicationScalarFieldEnum = (typeof ApplicationScalarFieldEnum)[key
 export const LicensesScalarFieldEnum = {
   key: 'key',
   duration: 'duration',
+  activadetAt: 'activadetAt',
+  status: 'status',
   createdAt: 'createdAt',
   licensesOwnerID: 'licensesOwnerID'
 } as const
@@ -741,6 +743,13 @@ export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
  * Reference to a field of type 'Json'
  */
 export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+/**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 

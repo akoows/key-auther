@@ -27,18 +27,24 @@ export type AggregateLicenses = {
 export type LicensesMinAggregateOutputType = {
   key: string | null
   duration: Date | null
+  activadetAt: Date | null
+  status: boolean | null
   createdAt: Date | null
 }
 
 export type LicensesMaxAggregateOutputType = {
   key: string | null
   duration: Date | null
+  activadetAt: Date | null
+  status: boolean | null
   createdAt: Date | null
 }
 
 export type LicensesCountAggregateOutputType = {
   key: number
   duration: number
+  activadetAt: number
+  status: number
   createdAt: number
   licensesOwnerID: number
   _all: number
@@ -48,18 +54,24 @@ export type LicensesCountAggregateOutputType = {
 export type LicensesMinAggregateInputType = {
   key?: true
   duration?: true
+  activadetAt?: true
+  status?: true
   createdAt?: true
 }
 
 export type LicensesMaxAggregateInputType = {
   key?: true
   duration?: true
+  activadetAt?: true
+  status?: true
   createdAt?: true
 }
 
 export type LicensesCountAggregateInputType = {
   key?: true
   duration?: true
+  activadetAt?: true
+  status?: true
   createdAt?: true
   licensesOwnerID?: true
   _all?: true
@@ -140,6 +152,8 @@ export type LicensesGroupByArgs<ExtArgs extends runtime.Types.Extensions.Interna
 export type LicensesGroupByOutputType = {
   key: string
   duration: Date
+  activadetAt: Date | null
+  status: boolean
   createdAt: Date
   licensesOwnerID: string[]
   _count: LicensesCountAggregateOutputType | null
@@ -168,6 +182,8 @@ export type LicensesWhereInput = {
   NOT?: Prisma.LicensesWhereInput | Prisma.LicensesWhereInput[]
   key?: Prisma.StringFilter<"Licenses"> | string
   duration?: Prisma.DateTimeFilter<"Licenses"> | Date | string
+  activadetAt?: Prisma.DateTimeNullableFilter<"Licenses"> | Date | string | null
+  status?: Prisma.BoolFilter<"Licenses"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Licenses"> | Date | string
   licensesOwnerID?: Prisma.StringNullableListFilter<"Licenses">
   licensesOwners?: Prisma.ApplicationListRelationFilter
@@ -176,6 +192,8 @@ export type LicensesWhereInput = {
 export type LicensesOrderByWithRelationInput = {
   key?: Prisma.SortOrder
   duration?: Prisma.SortOrder
+  activadetAt?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   licensesOwnerID?: Prisma.SortOrder
   licensesOwners?: Prisma.ApplicationOrderByRelationAggregateInput
@@ -187,6 +205,8 @@ export type LicensesWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.LicensesWhereInput[]
   NOT?: Prisma.LicensesWhereInput | Prisma.LicensesWhereInput[]
   duration?: Prisma.DateTimeFilter<"Licenses"> | Date | string
+  activadetAt?: Prisma.DateTimeNullableFilter<"Licenses"> | Date | string | null
+  status?: Prisma.BoolFilter<"Licenses"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Licenses"> | Date | string
   licensesOwnerID?: Prisma.StringNullableListFilter<"Licenses">
   licensesOwners?: Prisma.ApplicationListRelationFilter
@@ -195,6 +215,8 @@ export type LicensesWhereUniqueInput = Prisma.AtLeast<{
 export type LicensesOrderByWithAggregationInput = {
   key?: Prisma.SortOrder
   duration?: Prisma.SortOrder
+  activadetAt?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   licensesOwnerID?: Prisma.SortOrder
   _count?: Prisma.LicensesCountOrderByAggregateInput
@@ -208,6 +230,8 @@ export type LicensesScalarWhereWithAggregatesInput = {
   NOT?: Prisma.LicensesScalarWhereWithAggregatesInput | Prisma.LicensesScalarWhereWithAggregatesInput[]
   key?: Prisma.StringWithAggregatesFilter<"Licenses"> | string
   duration?: Prisma.DateTimeWithAggregatesFilter<"Licenses"> | Date | string
+  activadetAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Licenses"> | Date | string | null
+  status?: Prisma.BoolWithAggregatesFilter<"Licenses"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Licenses"> | Date | string
   licensesOwnerID?: Prisma.StringNullableListFilter<"Licenses">
 }
@@ -215,6 +239,8 @@ export type LicensesScalarWhereWithAggregatesInput = {
 export type LicensesCreateInput = {
   key?: string
   duration: Date | string
+  activadetAt?: Date | string | null
+  status: boolean
   createdAt?: Date | string
   licensesOwners?: Prisma.ApplicationCreateNestedManyWithoutLicensesKeyInput
 }
@@ -222,6 +248,8 @@ export type LicensesCreateInput = {
 export type LicensesUncheckedCreateInput = {
   key?: string
   duration: Date | string
+  activadetAt?: Date | string | null
+  status: boolean
   createdAt?: Date | string
   licensesOwnerID?: Prisma.LicensesCreatelicensesOwnerIDInput | string[]
   licensesOwners?: Prisma.ApplicationUncheckedCreateNestedManyWithoutLicensesKeyInput
@@ -229,12 +257,16 @@ export type LicensesUncheckedCreateInput = {
 
 export type LicensesUpdateInput = {
   duration?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  activadetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  status?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   licensesOwners?: Prisma.ApplicationUpdateManyWithoutLicensesKeyNestedInput
 }
 
 export type LicensesUncheckedUpdateInput = {
   duration?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  activadetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  status?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   licensesOwnerID?: Prisma.LicensesUpdatelicensesOwnerIDInput | string[]
   licensesOwners?: Prisma.ApplicationUncheckedUpdateManyWithoutLicensesKeyNestedInput
@@ -243,17 +275,23 @@ export type LicensesUncheckedUpdateInput = {
 export type LicensesCreateManyInput = {
   key?: string
   duration: Date | string
+  activadetAt?: Date | string | null
+  status: boolean
   createdAt?: Date | string
   licensesOwnerID?: Prisma.LicensesCreatelicensesOwnerIDInput | string[]
 }
 
 export type LicensesUpdateManyMutationInput = {
   duration?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  activadetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  status?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type LicensesUncheckedUpdateManyInput = {
   duration?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  activadetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  status?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   licensesOwnerID?: Prisma.LicensesUpdatelicensesOwnerIDInput | string[]
 }
@@ -271,6 +309,8 @@ export type LicensesOrderByRelationAggregateInput = {
 export type LicensesCountOrderByAggregateInput = {
   key?: Prisma.SortOrder
   duration?: Prisma.SortOrder
+  activadetAt?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   licensesOwnerID?: Prisma.SortOrder
 }
@@ -278,12 +318,16 @@ export type LicensesCountOrderByAggregateInput = {
 export type LicensesMaxOrderByAggregateInput = {
   key?: Prisma.SortOrder
   duration?: Prisma.SortOrder
+  activadetAt?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
 export type LicensesMinOrderByAggregateInput = {
   key?: Prisma.SortOrder
   duration?: Prisma.SortOrder
+  activadetAt?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -329,6 +373,15 @@ export type LicensesCreatelicensesOwnerIDInput = {
   set: string[]
 }
 
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
+  unset?: boolean
+}
+
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
+}
+
 export type LicensesUpdatelicensesOwnerIDInput = {
   set?: string[]
   push?: string | string[]
@@ -337,12 +390,16 @@ export type LicensesUpdatelicensesOwnerIDInput = {
 export type LicensesCreateWithoutLicensesOwnersInput = {
   key?: string
   duration: Date | string
+  activadetAt?: Date | string | null
+  status: boolean
   createdAt?: Date | string
 }
 
 export type LicensesUncheckedCreateWithoutLicensesOwnersInput = {
   key?: string
   duration: Date | string
+  activadetAt?: Date | string | null
+  status: boolean
   createdAt?: Date | string
   licensesOwnerID?: Prisma.LicensesCreatelicensesOwnerIDInput | string[]
 }
@@ -374,23 +431,31 @@ export type LicensesScalarWhereInput = {
   NOT?: Prisma.LicensesScalarWhereInput | Prisma.LicensesScalarWhereInput[]
   key?: Prisma.StringFilter<"Licenses"> | string
   duration?: Prisma.DateTimeFilter<"Licenses"> | Date | string
+  activadetAt?: Prisma.DateTimeNullableFilter<"Licenses"> | Date | string | null
+  status?: Prisma.BoolFilter<"Licenses"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Licenses"> | Date | string
   licensesOwnerID?: Prisma.StringNullableListFilter<"Licenses">
 }
 
 export type LicensesUpdateWithoutLicensesOwnersInput = {
   duration?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  activadetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  status?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type LicensesUncheckedUpdateWithoutLicensesOwnersInput = {
   duration?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  activadetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  status?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   licensesOwnerID?: Prisma.LicensesUpdatelicensesOwnerIDInput | string[]
 }
 
 export type LicensesUncheckedUpdateManyWithoutLicensesOwnersInput = {
   duration?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  activadetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  status?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   licensesOwnerID?: Prisma.LicensesUpdatelicensesOwnerIDInput | string[]
 }
@@ -429,6 +494,8 @@ export type LicensesCountOutputTypeCountLicensesOwnersArgs<ExtArgs extends runti
 export type LicensesSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   key?: boolean
   duration?: boolean
+  activadetAt?: boolean
+  status?: boolean
   createdAt?: boolean
   licensesOwnerID?: boolean
   licensesOwners?: boolean | Prisma.Licenses$licensesOwnersArgs<ExtArgs>
@@ -440,11 +507,13 @@ export type LicensesSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
 export type LicensesSelectScalar = {
   key?: boolean
   duration?: boolean
+  activadetAt?: boolean
+  status?: boolean
   createdAt?: boolean
   licensesOwnerID?: boolean
 }
 
-export type LicensesOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"key" | "duration" | "createdAt" | "licensesOwnerID", ExtArgs["result"]["licenses"]>
+export type LicensesOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"key" | "duration" | "activadetAt" | "status" | "createdAt" | "licensesOwnerID", ExtArgs["result"]["licenses"]>
 export type LicensesInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   licensesOwners?: boolean | Prisma.Licenses$licensesOwnersArgs<ExtArgs>
   _count?: boolean | Prisma.LicensesCountOutputTypeDefaultArgs<ExtArgs>
@@ -458,6 +527,8 @@ export type $LicensesPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     key: string
     duration: Date
+    activadetAt: Date | null
+    status: boolean
     createdAt: Date
     licensesOwnerID: string[]
   }, ExtArgs["result"]["licenses"]>
@@ -855,6 +926,8 @@ export interface Prisma__LicensesClient<T, Null = never, ExtArgs extends runtime
 export interface LicensesFieldRefs {
   readonly key: Prisma.FieldRef<"Licenses", 'String'>
   readonly duration: Prisma.FieldRef<"Licenses", 'DateTime'>
+  readonly activadetAt: Prisma.FieldRef<"Licenses", 'DateTime'>
+  readonly status: Prisma.FieldRef<"Licenses", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Licenses", 'DateTime'>
   readonly licensesOwnerID: Prisma.FieldRef<"Licenses", 'String[]'>
 }

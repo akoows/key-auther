@@ -42,6 +42,8 @@ model Application {
 model Licenses {
   key         String      @id @default(auto()) @map("_id") @db.ObjectId
   duration    DateTime    
+  activadetAt DateTime?
+  status      Boolean
   createdAt   DateTime    @default(now())
 
   licensesOwnerID String[] @db.ObjectId
