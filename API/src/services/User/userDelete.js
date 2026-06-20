@@ -1,9 +1,11 @@
-const userId = parseInt(req.params.id);
-const index = users.findIndex(u => u.id === userId);
+import { prisma } from "../lib/prisma.js";
+import { secureUser } from "../../dtos/secureUser.js";
 
-if (index === -1) {
-    return res.status(404).json({ error: 'Usuário não encontrado' });
-}
-
-users.splice(index, 1);
-res.status(204).send();
+export async function userDelete(userID) {
+    try {
+        const deletedUser = await prisma.user.delete({ where: {id : userID} });
+        return secureUser(deletedUser);
+    } catch (error) {
+        throw new Error("Erro ao deletar o usuário!", { cause: error });
+    }
+} 

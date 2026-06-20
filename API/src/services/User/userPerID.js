@@ -1,8 +1,16 @@
-const { user } = validateUserExists(req.params.id);
-    
-    if (!user) {
-        return res.status(404).json({ error: 'Usuário não encontrado' });
-    }
+import { prisma } from "../lib/prisma.js";
+import { secureUser } from "../../dtos/secureUser.js";
 
-    const { pass, ...safeUser } = user;
-    res.json(safeUser);
+export async function userGetById(userID) {
+    try {
+        const user = await prisma.user.findUnique({ where: { id: userID } });
+
+        if (!user) {
+            throw new Error("Usuário não encontrado!");
+        }
+
+        return secureUser(user);
+    } catch (error) {
+        throw new Error("Erro ao buscar usuário!", { cause: error });
+    }
+}

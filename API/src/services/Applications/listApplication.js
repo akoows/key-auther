@@ -1,11 +1,15 @@
-export async function getAll(ownerId) {
-    if (ownerId) {
-        return await prisma.application.findMany({
-            where: {
-                ownerIDs: { has: ownerId },
-            },
-        });
-    }
+import { prisma } from "../lib/prisma.js";
 
-    return await prisma.application.findMany();
+export async function listApplication(ownerId) {
+    try {
+        if (ownerId) {
+            return await prisma.application.findMany({
+                where: { ownerIDs: { has: ownerId } }
+            });
+        }
+
+        return await prisma.application.findMany();
+    } catch (error) {
+        throw new Error("Erro ao listar aplicações!", { cause: error });
+    }
 }

@@ -160,7 +160,7 @@ export type UserGroupByOutputType = {
   name: string
   email: string
   pass: string
-  avatarUrl: string
+  avatarUrl: string | null
   createdAt: Date
   applicationIDs: string[]
   _count: UserCountAggregateOutputType | null
@@ -191,7 +191,7 @@ export type UserWhereInput = {
   name?: Prisma.StringFilter<"User"> | string
   email?: Prisma.StringFilter<"User"> | string
   pass?: Prisma.StringFilter<"User"> | string
-  avatarUrl?: Prisma.StringFilter<"User"> | string
+  avatarUrl?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   applicationIDs?: Prisma.StringNullableListFilter<"User">
   applications?: Prisma.ApplicationListRelationFilter
@@ -216,7 +216,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   name?: Prisma.StringFilter<"User"> | string
   pass?: Prisma.StringFilter<"User"> | string
-  avatarUrl?: Prisma.StringFilter<"User"> | string
+  avatarUrl?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   applicationIDs?: Prisma.StringNullableListFilter<"User">
   applications?: Prisma.ApplicationListRelationFilter
@@ -243,7 +243,7 @@ export type UserScalarWhereWithAggregatesInput = {
   name?: Prisma.StringWithAggregatesFilter<"User"> | string
   email?: Prisma.StringWithAggregatesFilter<"User"> | string
   pass?: Prisma.StringWithAggregatesFilter<"User"> | string
-  avatarUrl?: Prisma.StringWithAggregatesFilter<"User"> | string
+  avatarUrl?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   applicationIDs?: Prisma.StringNullableListFilter<"User">
 }
@@ -253,7 +253,7 @@ export type UserCreateInput = {
   name: string
   email: string
   pass: string
-  avatarUrl?: string
+  avatarUrl?: string | null
   createdAt?: Date | string
   applications?: Prisma.ApplicationCreateNestedManyWithoutOwnersInput
 }
@@ -263,7 +263,7 @@ export type UserUncheckedCreateInput = {
   name: string
   email: string
   pass: string
-  avatarUrl?: string
+  avatarUrl?: string | null
   createdAt?: Date | string
   applicationIDs?: Prisma.UserCreateapplicationIDsInput | string[]
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutOwnersInput
@@ -273,7 +273,7 @@ export type UserUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   pass?: Prisma.StringFieldUpdateOperationsInput | string
-  avatarUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   applications?: Prisma.ApplicationUpdateManyWithoutOwnersNestedInput
 }
@@ -282,7 +282,7 @@ export type UserUncheckedUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   pass?: Prisma.StringFieldUpdateOperationsInput | string
-  avatarUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   applicationIDs?: Prisma.UserUpdateapplicationIDsInput | string[]
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutOwnersNestedInput
@@ -293,7 +293,7 @@ export type UserCreateManyInput = {
   name: string
   email: string
   pass: string
-  avatarUrl?: string
+  avatarUrl?: string | null
   createdAt?: Date | string
   applicationIDs?: Prisma.UserCreateapplicationIDsInput | string[]
 }
@@ -302,7 +302,7 @@ export type UserUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   pass?: Prisma.StringFieldUpdateOperationsInput | string
-  avatarUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -310,7 +310,7 @@ export type UserUncheckedUpdateManyInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   pass?: Prisma.StringFieldUpdateOperationsInput | string
-  avatarUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   applicationIDs?: Prisma.UserUpdateapplicationIDsInput | string[]
 }
@@ -369,6 +369,11 @@ export type StringFieldUpdateOperationsInput = {
   set?: string
 }
 
+export type NullableStringFieldUpdateOperationsInput = {
+  set?: string | null
+  unset?: boolean
+}
+
 export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
 }
@@ -421,7 +426,7 @@ export type UserCreateWithoutApplicationsInput = {
   name: string
   email: string
   pass: string
-  avatarUrl?: string
+  avatarUrl?: string | null
   createdAt?: Date | string
 }
 
@@ -430,7 +435,7 @@ export type UserUncheckedCreateWithoutApplicationsInput = {
   name: string
   email: string
   pass: string
-  avatarUrl?: string
+  avatarUrl?: string | null
   createdAt?: Date | string
   applicationIDs?: Prisma.UserCreateapplicationIDsInput | string[]
 }
@@ -464,7 +469,7 @@ export type UserScalarWhereInput = {
   name?: Prisma.StringFilter<"User"> | string
   email?: Prisma.StringFilter<"User"> | string
   pass?: Prisma.StringFilter<"User"> | string
-  avatarUrl?: Prisma.StringFilter<"User"> | string
+  avatarUrl?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   applicationIDs?: Prisma.StringNullableListFilter<"User">
 }
@@ -473,7 +478,7 @@ export type UserUpdateWithoutApplicationsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   pass?: Prisma.StringFieldUpdateOperationsInput | string
-  avatarUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -481,7 +486,7 @@ export type UserUncheckedUpdateWithoutApplicationsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   pass?: Prisma.StringFieldUpdateOperationsInput | string
-  avatarUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   applicationIDs?: Prisma.UserUpdateapplicationIDsInput | string[]
 }
@@ -490,7 +495,7 @@ export type UserUncheckedUpdateManyWithoutApplicationsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   pass?: Prisma.StringFieldUpdateOperationsInput | string
-  avatarUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   applicationIDs?: Prisma.UserUpdateapplicationIDsInput | string[]
 }
@@ -566,7 +571,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     name: string
     email: string
     pass: string
-    avatarUrl: string
+    avatarUrl: string | null
     createdAt: Date
     applicationIDs: string[]
   }, ExtArgs["result"]["user"]>

@@ -1,9 +1,15 @@
-const licenseKey = req.params.licenseKey;
-    const index = licenses.findIndex(l => l.licenseKey === licenseKey);
-    
-    if (index === -1) {
-        return res.status(404).json({ error: 'Licença não encontrada' });
-    }
+import { prisma } from "../lib/prisma.js";
 
-    licenses.splice(index, 1);
-    res.status(204).send();
+export async function licenseDelete(licenseID) {
+    try {
+        const license = await prisma.licenses.findUnique({ where: { id: licenseID } });
+
+        if (!license) {
+            throw new Error("Licença não encontrada!");
+        }
+
+        await prisma.licenses.delete({ where: { id: licenseID } });
+    } catch (error) {
+        throw new Error("Erro ao deletar licença!", { cause: error });
+    }
+}

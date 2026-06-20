@@ -1,27 +1,33 @@
-const { user } = validateUserExists(req.params.id);
+import { prisma } from "../lib/prisma.js";
+import { secureUser } from "../../dtos/secureUser.js";
+import bcrypt from "bcrypt";
 
-if (!user) {
-    return res.status(404).json({ error: 'Usuário não encontrado' });
-}
+export async function userEdit(userID, data) {
+    try {
+        const user = await prisma.user.findUnique({ where: { id: userID } });
 
-const { name, pass } = req.body;
+        if (!user) {
+            throw new Error("Usuário inexistente!");
+        }
 
-if (name) {
-    if (typeof name !== 'string') {
-        return res.status(400).json({ error: 'Nome inválido' });
+        if (data.name && typeof data.name !== "string") {
+            throw new Error("Nome inválido!");
+        }
+
+        if (data.pass && typeof data.pass !== "string") {
+            throw new Error("Senha inválida!");
+        }
+
+        const updatedUser = await prisma.user.update({
+            where: { id: userID },
+            data: {
+                name: data.name ?? user.name,
+                pass: data.pass ? await bcrypt.hash(data.pass, 10) : user.pass
+            }
+        });
+
+        return secureUser(updatedUser);
+    } catch (error) {
+        throw new Error("Erro ao editar o usuário!", { cause: error });
     }
-    if (users.find(u => u.name === name && u.id !== user.id)) {
-        return res.status(409).json({ error: 'Nome de usuário já existe' });
-    }
-    user.name = name;
 }
-
-if (pass) {
-    if (typeof pass !== 'string') {
-        return res.status(400).json({ error: 'Senha inválida' });
-    }
-    user.pass = await bcrypt.hash(pass, 10);
-}
-
-const { pass: _, ...safeUser } = user;
-res.json(safeUser);

@@ -1,13 +1,23 @@
-const { name, pass } = req.body;
-const user = users.find(u => u.name === name);
+import { prisma } from "../lib/prisma.js";
+import { secureUser } from "../../dtos/secureUser.js";
+import bcrypt from "bcrypt";
 
-if (!user) {
-    return res.status(404).json({ error: "Usuário não encontrado" });
+export async function userLogin(data) {
+    try {
+        const user = await prisma.user.findUnique({ where: { email: data.email } });
+
+        if (!user) {
+            throw new Error("Usuário não encontrado!");
+        }
+
+        const validPass = await bcrypt.compare(data.pass, user.pass);
+
+        if (!validPass) {
+            throw new Error("Senha incorreta!");
+        }
+
+        return secureUser(user);
+    } catch (error) {
+        throw new Error("Erro ao realizar login!", { cause: error });
+    }
 }
-
-const valid = await bcrypt.compare(pass, user.pass);
-if (!valid) {
-    return res.status(401).json({ error: "Senha incorreta" });
-}
-
-res.json({ id: user.id, name: user.name, email: user.email });

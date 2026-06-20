@@ -1,51 +1,46 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
-generator client {
-  provider = "prisma-client"
-  output   = "../app/generated/prisma"
-}
-
-datasource db {
-  provider = "mongodb"
-  url = env("DATABASE_URL")
-}
-
-model User {
-  id             String        @id @default(auto()) @map("_id") @db.ObjectId
-  name           String
-  email          String        @unique
-  pass           String
-  avatarUrl      String        @default("https://res.cloudinary.com/dylkeqcms/image/upload/v1762125098/default_uqhrk3.jpg")
-  createdAt      DateTime      @default(now())
-
-  applicationIDs String[]      @db.ObjectId
-  applications   Application[] @relation("ApplicationOwners", fields: [applicationIDs], references: [id])
-}
-
-model Application {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  name      String
-  image     String
-  config    Json
-  createdAt DateTime @default(now())
-
-  licenses String[] @db.ObjectId
-  licensesKey  Licenses[]   @relation("LicenseOwners", fields: [licenses], references: [key])
-
-  ownerIDs  String[] @db.ObjectId
-  owners    User[]   @relation("ApplicationOwners", fields: [ownerIDs], references: [id])
-}
-
-model Licenses {
-  key         String      @id @default(auto()) @map("_id") @db.ObjectId
-  duration    DateTime    
-  activadetAt DateTime?
-  status      Boolean
-  createdAt   DateTime    @default(now())
-
-  licensesOwnerID String[] @db.ObjectId
-  licensesOwners  Application[]   @relation("LicenseOwners", fields: [licensesOwnerID], references: [id])
+  generator client {
+    provider = "prisma-client-js"
+    output   = "../app/generated/prisma"
   }
+
+  datasource db {
+    provider = "mongodb"
+    url = env("DATABASE_URL")
+  }
+
+  model User {
+    id             String        @id @default(auto()) @map("_id") @db.ObjectId
+    name           String
+    email          String        @unique
+    pass           String
+    avatarUrl      String?        @default("https://res.cloudinary.com/dylkeqcms/image/upload/v1762125098/default_uqhrk3.jpg")
+    createdAt      DateTime      @default(now())
+
+    applicationIDs String[]      @db.ObjectId
+    applications   Application[] @relation("ApplicationOwners", fields: [applicationIDs], references: [id])
+  }
+
+  model Application {
+    id        String   @id @default(auto()) @map("_id") @db.ObjectId
+    name      String
+    image     String
+    config    Json
+    createdAt DateTime @default(now())
+
+    licenses String[] @db.ObjectId
+    licensesKey  Licenses[]   @relation("LicenseOwners", fields: [licenses], references: [id])
+
+    ownerIDs  String[] @db.ObjectId
+    owners    User[]   @relation("ApplicationOwners", fields: [ownerIDs], references: [id])
+  }
+
+  model Licenses {
+    id         String      @id @default(auto()) @map("_id") @db.ObjectId
+    duration    DateTime    
+    activatedAt DateTime?
+    status      Boolean
+    createdAt   DateTime    @default(now())
+
+    licensesOwnerID String[] @db.ObjectId
+    licensesOwners  Application[]   @relation("LicenseOwners", fields: [licensesOwnerID], references: [id])
+    }

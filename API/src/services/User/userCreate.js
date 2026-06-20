@@ -1,24 +1,19 @@
-try {
-    // Criação do usuário
-    const hashedPass = await bcrypt.hash(pass, 10);
-    const newId = users.length > 0 ? Math.max(...users.map(u => u.id)) + 1 : 1;
+import { prisma } from "../lib/prisma.js";
+import bcrypt from "bcrypt";
+import { secureUser } from "../../dtos/secureUser.js";
+
+export async function userCreate(data) {
+    const hashedPass = await bcrypt.hash(data.pass, 10);
 
     const user = {
-        id: newId,
-        name,
-        email,
-        pass: hashedPass,
-        createdAt: new Date().toISOString(),
-        avatarUrl: 'https://res.cloudinary.com/dylkeqcms/image/upload/v1762125098/default_uqhrk3.jpg'
-    };
-
-    users.push(user);
-
-    // Retorna usuário sem senha
-    const { pass: _, ...safeUser } = user;
-    res.status(201).json(safeUser);
-
-} catch (error) {
-    console.error('Erro ao criar usuário:', error);
-    res.status(500).json({ error: 'Erro ao criar usuário' });
+        name: data.name,
+        email: data.email,
+        pass: hashedPass
+    }
+    try {
+        const unsecuredUser = await prisma.user.create({ data: user });
+        return secureUser(unsecuredUser);
+    } catch (error) {
+        throw new Error("Erro ao criar ao usuário!", { cause: error})
+    }
 }

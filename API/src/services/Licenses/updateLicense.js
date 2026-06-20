@@ -1,26 +1,30 @@
-const { license } = validateLicenseExists(req.params.licenseKey);
-    
-    if (!license) {
-        return res.status(404).json({ error: 'Licença não encontrada' });
-    }
+import { prisma } from "../lib/prisma.js";
 
-    const { type, durationDays } = req.body;
+export async function licenseEdit(licenseID, data) {
+    try {
+        const license = await prisma.licenses.findUnique({ where: { id: licenseID } });
 
-    if (type) {
-        const validTypes = ['basic', 'premium', 'pro'];
-        if (typeof type !== 'string' || !validTypes.includes(type.toLowerCase())) {
-            return res.status(400).json({ error: 'Tipo de licença inválido' });
+        if (!license) {
+            throw new Error("Licença não encontrada!");
         }
-        license.type = type;
-    }
 
-    if (durationDays) {
-        if (typeof durationDays !== 'number') {
-            return res.status(400).json({ error: 'Duração inválida' });
+        if (data.durationDays && typeof data.durationDays !== "number") {
+            throw new Error("Duração inválida!");
         }
-        const newExpirationDate = new Date(license.expirationDate);
-        newExpirationDate.setDate(newExpirationDate.getDate() + durationDays);
-        license.expirationDate = newExpirationDate.toISOString();
-    }
 
-    res.json(license);
+        const newExpiration = data.durationDays
+            ? new Date(license.duration.setDate(license.duration.getDate() + data.durationDays))
+            : license.duration;
+
+        const updatedLicense = await prisma.licenses.update({
+            where: { id: licenseID },
+            data: {
+                duration: newExpiration
+            }
+        });
+
+        return updatedLicense;
+    } catch (error) {
+        throw new Error("Erro ao editar licença!", { cause: error });
+    }
+}

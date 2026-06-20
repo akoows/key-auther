@@ -1,10 +1,11 @@
-export function listLicenses(data) {
+import { prisma } from "../lib/prisma.js";
+
+export async function listLicenses(data) {
     try {
-        const uId = data.userId;
         return await prisma.licenses.findMany({
-            where: { licensesOwnerID }
-        })
+            where: { licensesOwnerID: { has: data.userId } }
+        });
     } catch (error) {
-        throw new Error(error);
+        throw new Error("Erro ao listar licenças!", { cause: error });
     }
 }
