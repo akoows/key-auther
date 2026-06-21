@@ -1,0 +1,31 @@
+version: '3.9'
+ 
+services:
+  api:
+    build: .
+    container_name: key-auther-api
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: mongodb://mongo:27017/keyauther
+    depends_on:
+      - mongo
+    volumes:
+      - .:/app
+      - /app/node_modules
+    restart: unless-stopped
+ 
+  mongo:
+    image: mongo:7
+    container_name: key-auther-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodata:/data/db
+    restart: unless-stopped
+ 
+volumes:
+  mongodata:
+ 
