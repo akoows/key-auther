@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>API Tester</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: system-ui, sans-serif; background: #111; color: #e5e5e5; padding: 2rem; }
+h1 { font-size: 18px; font-weight: 500; margin-bottom: 1.5rem; color: #fff; }
+.group-label { font-size: 11px; font-weight: 600; color: #555; letter-spacing: 0.08em; margin: 1.5rem 0 0.5rem; text-transform: uppercase; }
+.section { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 10px; padding: 1rem 1.25rem; margin-bottom: 1rem; }
+.section-title { font-size: 13px; font-weight: 500; color: #aaa; margin-bottom: 12px; }
+.row { display: flex; gap: 8px; margin-bottom: 8px; align-items: center; }
+input[type=text], input[type=email], input[type=password] { flex: 1; font-size: 13px; padding: 6px 10px; border: 1px solid #2e2e2e; border-radius: 6px; background: #222; color: #e5e5e5; outline: none; }
+input[type=text]:focus, input[type=email]:focus, input[type=password]:focus { border-color: #555; }
+input[type=file] { flex: 1; font-size: 13px; color: #aaa; }
+button { font-size: 13px; padding: 6px 14px; border: 1px solid #333; border-radius: 6px; background: #222; color: #e5e5e5; cursor: pointer; white-space: nowrap; }
+button:hover { background: #2e2e2e; }
+.method { font-size: 11px; font-weight: 600; padding: 2px 7px; border-radius: 5px; margin-right: 6px; }
+.GET { background: #085041; color: #9FE1CB; }
+.POST { background: #0C447C; color: #B5D4F4; }
+.DELETE { background: #791F1F; color: #F7C1C1; }
+.PATCH { background: #633806; color: #FAC775; }
+.response { margin-top: 12px; background: #161616; border-radius: 6px; padding: 10px; font-size: 12px; font-family: monospace; color: #888; white-space: pre-wrap; word-break: break-all; max-height: 200px; overflow-y: auto; border: 1px solid #2a2a2a; }
+.status-ok { color: #5DCAA5; font-weight: 600; }
+.status-err { color: #F09595; font-weight: 600; }
+label { font-size: 12px; color: #666; min-width: 80px; }
+.base-row { display: flex; gap: 8px; align-items: center; margin-bottom: 1.5rem; background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 10px; padding: 0.75rem 1.25rem; }
+</style>
+</head>
+<body>
+
+<h1>API Tester</h1>
+
+<div class="base-row">
+  <label>Base URL</label>
+  <input type="text" id="baseUrl" value="http://localhost:3000" style="flex:1" />
+</div>
+
+<div class="group-label">Users</div>
+
+<div class="section">
+  <div class="section-title"><span class="method POST">POST</span> criar usuário</div>
+  <div class="row"><label>name</label><input type="text" id="u-name" placeholder="Nome" /></div>
+  <div class="row"><label>email</label><input type="email" id="u-email" placeholder="email@exemplo.com" /></div>
+  <div class="row"><label>pass</label><input type="password" id="u-pass" placeholder="senha" /></div>
+  <div class="row"><button onclick="createUser()" style="margin-left:88px">Enviar</button></div>
+  <div class="response" id="u-create-res">—</div>
+</div>
+
+<div class="group-label">Applications</div>
+
+<div class="section">
+  <div class="section-title"><span class="method GET">GET</span> listar applications</div>
+  <div class="row">
+    <label>ownerID</label>
+    <input type="text" id="list-owner" placeholder="opcional" />
+    <button onclick="listApps()">Enviar</button>
+  </div>
+  <div class="response" id="list-res">—</div>
+</div>
+
+<div class="section">
+  <div class="section-title"><span class="method GET">GET</span> buscar por id</div>
+  <div class="row">
+    <label>ID</label>
+    <input type="text" id="get-id" placeholder="application id" />
+    <button onclick="getApp()">Enviar</button>
+  </div>
+  <div class="response" id="get-res">—</div>
+</div>
+
+<div class="section">
+  <div class="section-title"><span class="method POST">POST</span> criar application</div>
+  <div class="row"><label>name</label><input type="text" id="create-name" placeholder="Nome da app" /></div>
+  <div class="row"><label>ownerID</label><input type="text" id="create-owner" placeholder='["id1","id2"]' /></div>
+  <div class="row"><label>config</label><input type="text" id="create-config" placeholder='{"tag":"APP","types":["basic"],"default_duration":30}' /></div>
+  <div class="row"><label>imagem</label><input type="file" id="create-image" accept="image/*" /></div>
+  <div class="row"><button onclick="createApp()" style="margin-left:88px">Enviar</button></div>
+  <div class="response" id="create-res">—</div>
+</div>
+
+<div class="section">
+  <div class="section-title"><span class="method PATCH">PATCH</span> atualizar config</div>
+  <div class="row"><label>ID</label><input type="text" id="patch-id" placeholder="application id" /></div>
+  <div class="row"><label>tag</label><input type="text" id="patch-tag" placeholder="NEWTAG" /></div>
+  <div class="row"><label>duration</label><input type="text" id="patch-duration" placeholder="30" /></div>
+  <div class="row"><button onclick="patchApp()" style="margin-left:88px">Enviar</button></div>
+  <div class="response" id="patch-res">—</div>
+</div>
+
+<div class="section">
+  <div class="section-title"><span class="method DELETE">DELETE</span> deletar application</div>
+  <div class="row">
+    <label>ID</label>
+    <input type="text" id="del-id" placeholder="application id" />
+    <button onclick="deleteApp()">Enviar</button>
+  </div>
+  <div class="response" id="del-res">—</div>
+</div>
+
+<script>
+const base = () => document.getElementById('baseUrl').value.replace(/\/$/, '');
+
+function show(id, status, data) {
+  const el = document.getElementById(id);
+  const ok = status >= 200 && status < 300;
+  el.innerHTML = `<span class="${ok ? 'status-ok' : 'status-err'}">${status}</span>\n${JSON.stringify(data, null, 2)}`;
+}
+
+async function createUser() {
+  const body = { name: document.getElementById('u-name').value, email: document.getElementById('u-email').value, pass: document.getElementById('u-pass').value };
+  try {
+    const r = await fetch(`${base()}/users`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    show('u-create-res', r.status, await r.json());
+  } catch(e) { document.getElementById('u-create-res').textContent = e.message; }
+}
+
+async function listApps() {
+  const owner = document.getElementById('list-owner').value;
+  const url = base() + '/applications' + (owner ? `?ownerId=${owner}` : '');
+  try {
+    const r = await fetch(url);
+    show('list-res', r.status, await r.json());
+  } catch(e) { document.getElementById('list-res').textContent = e.message; }
+}
+
+async function getApp() {
+  const id = document.getElementById('get-id').value;
+  try {
+    const r = await fetch(`${base()}/applications/${id}`);
+    show('get-res', r.status, await r.json());
+  } catch(e) { document.getElementById('get-res').textContent = e.message; }
+}
+
+async function createApp() {
+  const fd = new FormData();
+  fd.append('name', document.getElementById('create-name').value);
+  fd.append('ownerID', document.getElementById('create-owner').value);
+  fd.append('config', document.getElementById('create-config').value);
+  const file = document.getElementById('create-image').files[0];
+  if (file) fd.append('image', file);
+  try {
+    const r = await fetch(`${base()}/applications`, { method: 'POST', body: fd });
+    show('create-res', r.status, await r.json());
+  } catch(e) { document.getElementById('create-res').textContent = e.message; }
+}
+
+async function patchApp() {
+  const id = document.getElementById('patch-id').value;
+  const body = { tag: document.getElementById('patch-tag').value, default_duration: Number(document.getElementById('patch-duration').value) };
+  try {
+    const r = await fetch(`${base()}/applications/${id}/config`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    show('patch-res', r.status, await r.json());
+  } catch(e) { document.getElementById('patch-res').textContent = e.message; }
+}
+
+async function deleteApp() {
+  const id = document.getElementById('del-id').value;
+  try {
+    const r = await fetch(`${base()}/applications/${id}`, { method: 'DELETE' });
+    if (r.status === 204) {
+      document.getElementById('del-res').innerHTML = '<span class="status-ok">204 — deletado</span>';
+    } else {
+      show('del-res', r.status, await r.json());
+    }
+  } catch(e) { document.getElementById('del-res').textContent = e.message; }
+}
+</script>
+</body>
+</html>

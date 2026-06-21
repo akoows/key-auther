@@ -1,5 +1,5 @@
 import express from "express";
-import { appRouter } from "./index.js";
+import { appRouter, userRouter } from "./src/index.js";
 
 const app = express();
 app.use(express.json());
@@ -10,6 +10,7 @@ app.use((req, res, next) => {
 
 // Rotas
 app.use(appRouter);
+app.use(userRouter);
 console.log("✅ Rotas de aplicação carregadas");
 
 // Iniciando servidor
