@@ -1,3 +1,4 @@
+// Importações dos Services
 import { userCreate } from "../services/User/userCreate.js";
 import { userDelete } from "../services/User/userDelete.js";
 import { userEdit } from "../services/User/userEdit.js";
@@ -5,6 +6,7 @@ import { userList } from "../services/User/userList.js";
 import { userLogin } from "../services/User/userLogin.js";
 import { userPerID } from "../services/User/userPerID.js";
 
+// Controllers
 export async function userCreateController(req, res) {
     try {
         const user = await userCreate(req.body);

@@ -1,3 +1,4 @@
+// Importações dos Services
 import { appByID } from "../services/Applications/appByID.js";
 import { createApplication } from "../services/Applications/createApplication.js";
 import { deleteApplication } from "../services/Applications/deleteApplication.js";
@@ -5,8 +6,10 @@ import { listApplication } from "../services/Applications/listApplication.js";
 import { updateAppConfig } from "../services/Applications/updateAppConfig.js";
 import { upload } from "../lib/multer.js";
 
+// Middlewares
 export const uploadMiddleware = upload.single("image");
 
+// Controllers
 export async function appByIDController(req, res) {
     try {
         const { id } = req.params;

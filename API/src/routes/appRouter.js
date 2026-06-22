@@ -10,10 +10,10 @@ import {
 
 const appRouter = Router();
 
-appRouter.get("/", listApplicationController);
-appRouter.get("/:id", appByIDController);
-appRouter.post("/", uploadMiddleware, createApplicationController);
-appRouter.delete("/:id", deleteApplicationController);
-appRouter.patch("/:id/config", updateAppConfigController);
+appRouter.get("/", listApplicationController); // Listar aplicativos
+appRouter.get("/:id", appByIDController); // Listar aplicatativos por ID
+appRouter.post("/", uploadMiddleware, createApplicationController); // Criar aplicativo
+appRouter.delete("/:id", deleteApplicationController); // Deletar aplicação
+appRouter.patch("/:id/config", updateAppConfigController); // Editar aplicação
 
 export default appRouter;
