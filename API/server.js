@@ -1,5 +1,5 @@
 import express from "express";
-import { appRouter, userRouter } from "./src/index.js";
+import { router } from "./src/index.js";
 
 const app = express();
 app.use(express.json());
@@ -9,8 +9,7 @@ app.use((req, res, next) => {
 });
 
 // Rotas
-app.use(appRouter);
-app.use(userRouter);
+app.use(router);
 console.log("✅ Rotas de aplicação carregadas");
 
 // Iniciando servidor

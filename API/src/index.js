@@ -1,4 +1,15 @@
+// Bibliotecas
+import express from "express";
+
+// Routers
 import appRouter from "./routes/appRouter.js";
 import userRouter from "./routes/userRoutes.js";
 
-export { appRouter, userRouter };
+const router = express.Router();
+
+// Instanciando Rotas
+router.use("/users", userRouter);
+router.use("/applications", appRouter);
+
+// Exportando router
+export { router };
