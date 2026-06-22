@@ -10,9 +10,9 @@ import {
 
 const appRouter = Router();
 
-appRouter.get(listApplicationController);
+appRouter.get("/", listApplicationController);
 appRouter.get("/:id", appByIDController);
-appRouter.post(uploadMiddleware, createApplicationController);
+appRouter.post("/", uploadMiddleware, createApplicationController);
 appRouter.delete("/:id", deleteApplicationController);
 appRouter.patch("/:id/config", updateAppConfigController);
 
