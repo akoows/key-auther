@@ -1,4 +1,4 @@
-import { prisma } from "../lib/prisma.js";
+import { prisma } from "../../lib/prisma.js";
 import { secureUser } from "../../dtos/secureUser.js";
 import bcrypt from "bcrypt";
 

@@ -1,7 +1,7 @@
-import { prisma } from "../lib/prisma.js";
+import { prisma } from "../../lib/prisma.js";
 import { secureUser } from "../../dtos/secureUser.js";
 
-export async function userGetById(userID) {
+export async function userPerID(userID) {
     try {
         const user = await prisma.user.findUnique({ where: { id: userID } });
 
