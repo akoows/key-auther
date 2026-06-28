@@ -22,7 +22,7 @@ O sistema é composto por:
 | Node.js | HTML5 | C# |
 | Express.js | CSS3 | XAML |
 | | JavaScript | |
-| | Fetch API | |
+| Prisma 6.0 | Fetch API | |
 
 ---
 
@@ -42,42 +42,40 @@ O sistema é composto por:
 ## Usuários
 | Método | Endpoint | Descrição |
 |--------|----------|-----------|
-| POST | `/api/users` | Criar usuário |
-| GET | `/api/users` | Listar usuários |
-| GET | `/api/users/:id` | Buscar usuário |
+| POST | /users/ | Criar usuário |
+| GET | `/users/` | Listar usuários |
+| GET | `/users/:id` | Buscar usuário |
 | POST | `/api/users/login` | Login |
-| PUT | `/api/users/:id` | Atualizar usuário |
-| DELETE | `/api/users/:id` | Deletar usuário |
-| POST | `/api/users/:id/avatar` | Upload avatar |
+| PUT | `/users/:id` | Atualizar usuário |
+| DELETE | `/users/:id` | Deletar usuário |
+| POST | `/users/:id/avatar` | Upload avatar |
 
 ## Licenças
 | Método | Endpoint | Descrição |
 |--------|----------|-----------|
-| POST | `/api/licenses` | Criar licença |
-| POST | `/api/licenses/:licenseKey/validate` | Validar licença |
-| GET | `/api/licenses` | Listar licenças |
-| GET | `/api/licenses/user/:userId` | Licenças do usuário |
-| PATCH | `/api/licenses/:licenseKey` | Atualizar licença |
-| DELETE | `/api/licenses/:licenseKey` | Deletar licença |
+| POST | `/licenses` | Criar licença |
+| POST | `/licenses/:licenseKey/validate` | Validar licença |
+| GET | `/licenses` | Listar licenças |
+| GET | `/licenses/user/:userId` | Licenças do usuário |
+| PATCH | `/licenses/:licenseKey` | Atualizar licença |
+| DELETE | `/licenses/:licenseKey` | Deletar licença |
 
 ## Aplicações
 | Método | Endpoint | Descrição |
 |--------|----------|-----------|
-| POST | `/api/applications` | Criar aplicação |
-| GET | `/api/applications` | Listar aplicações |
-| GET | `/api/applications/:id` | Buscar aplicação |
-| DELETE | `/api/applications/:id` | Deletar aplicação |
-| PUT | `/api/applications/:appId/config` | Atualizar configurações |
+| POST | `/applications` | Criar aplicação |
+| GET | `/applications` | Listar aplicações |
+| GET | `/applications/:id` | Buscar aplicação |
+| DELETE | `/applications/:id` | Deletar aplicação |
+| PUT | `/applications/:appId/config` | Atualizar configurações |
 
 ---
 
 ## 🧑‍💻 Autor
 
-Desenvolvido por [**Luis Fernando**](https://github.com/akoows), [**Bruno Santana**](https://github.com/voante10), [**Giovana Almeida**](https://www.instagram.com/giyy_allst) e [**Breno Ledo**](https://www.instagram.com/l3do.uwu) 
+Desenvolvido por [**Luis Manduca**](https://github.com/akoows) 
 
 💼 Site: [**Key Author**](https://akoows.github.io/keyauthor)  
-
-🔗 Repositório: [github.com/akoows/key-auther](https://github.com/akoows/key-auther), [github.com/akoows/keyauthor](https://github.com/akoows/keyauthor)
 
 ---
 
