@@ -21,8 +21,8 @@ O sistema é composto por:
 |----------|-----------|-----|
 | Node.js | HTML5 | C# |
 | Express.js | CSS3 | XAML |
-| | JavaScript | |
-| Prisma 6.0 | Fetch API | |
+| Prisma 6.0 | JavaScript | |
+| | Fetch API | |
 
 ---
 
