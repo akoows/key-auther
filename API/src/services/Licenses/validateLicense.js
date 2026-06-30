@@ -1,8 +1,12 @@
 import { prisma } from "../../lib/prisma.js";
 
-export async function licenseValidate(licenseID) {
+export async function licenseValidate(licenseKey) {
     try {
-        const license = await prisma.licenses.findUnique({ where: { id: licenseID } });
+        const license = await prisma.licenses.findUnique({
+    where: {
+        key: licenseKey
+    }
+});
 
         if (!license) {
             throw new Error("Licença não encontrada!");

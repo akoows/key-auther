@@ -28,14 +28,15 @@ export async function licenseCreate(data) {
         const expirationDate = new Date();
         expirationDate.setDate(expirationDate.getDate() + data.durationDays);
 
-        const license = await prisma.licenses.create({
-            data: {
-                duration: expirationDate,
-                activatedAt: null,
-                status: false,
-                licensesOwnerID: [application.id]
-            }
-        });
+       const license = await prisma.licenses.create({
+        data: {
+            key: licenseKey,
+            duration: expirationDate,
+            activatedAt: null,
+            status: false,
+            licensesOwnerID: [application.id]
+    }
+});
 
         return license;
     } catch (error) {
