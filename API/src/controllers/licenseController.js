@@ -1,8 +1,8 @@
-import { licenseCreate } from "../services/Licenses/CreateLicences.js";
-import { licenseDelete } from "../services/Licenses/DeleteLicences.js";
-import { listLicenses } from "../services/Licenses/ListLicences.js";
-import { licenseEdit } from "../services/Licenses/updateLicences.js";
-import { licenseValidate } from "../services/Licenses/validateLicences.js";
+import { licenseCreate } from "../services/Licenses/createLicense.js";
+import { licenseDelete } from "../services/Licenses/deleteLicense.js";
+import { listLicenses } from "../services/Licenses/listLicenseByID.js";
+import { licenseEdit } from "../services/Licenses/updateLicense.js";
+import { licenseValidate } from "../services/Licenses/validateLicense.js";
 
 export async function createLicenseController(req, res) {
     try {

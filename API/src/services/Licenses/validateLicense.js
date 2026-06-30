@@ -19,7 +19,7 @@ export async function licenseValidate(licenseKey) {
         if (license.status === true) {
             if (isExpired) {
                 await prisma.licenses.update({
-                    where: { id: licenseID },
+                    where: { id: license.id },
                     data: { status: false }
                 });
                 throw new Error("Licença expirada!");
@@ -35,7 +35,7 @@ export async function licenseValidate(licenseKey) {
 
         if (license.status === false && !isExpired) {
             const updatedLicense = await prisma.licenses.update({
-                where: { id: licenseID },
+                where: { id: license.id },
                 data: {
                     activatedAt: now,
                     status: true

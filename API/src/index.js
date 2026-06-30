@@ -4,6 +4,7 @@ import express from "express";
 // Routers
 import appRouter from "./routes/appRouter.js";
 import userRouter from "./routes/userRoutes.js";
+import licenseRouter from "./routes/licenseRouter.js";
 
 const router = express.Router();
 
