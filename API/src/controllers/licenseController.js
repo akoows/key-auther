@@ -18,7 +18,7 @@ export async function listLicensesController(req, res) {
         const licenses = await listLicenses(req.query);
         return res.status(200).json(licenses);
     } catch (error) {
-        return res.status(500).json({ error: error.message });
+        return res.status(400).json({ error: error.message });
     }
 }
 

@@ -14,6 +14,7 @@ licenseRouter.get("/", listLicensesController);
 licenseRouter.post("/", createLicenseController);
 licenseRouter.post("/validate", validateLicenseController);
 licenseRouter.patch("/:id", editLicenseController);
+licenseRouter.put("/:id", editLicenseController);
 licenseRouter.delete("/:id", deleteLicenseController);
 
 export default licenseRouter;

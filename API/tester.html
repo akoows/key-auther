@@ -1,172 +1,755 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>API Tester</title>
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: system-ui, sans-serif; background: #111; color: #e5e5e5; padding: 2rem; }
-h1 { font-size: 18px; font-weight: 500; margin-bottom: 1.5rem; color: #fff; }
-.group-label { font-size: 11px; font-weight: 600; color: #555; letter-spacing: 0.08em; margin: 1.5rem 0 0.5rem; text-transform: uppercase; }
-.section { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 10px; padding: 1rem 1.25rem; margin-bottom: 1rem; }
-.section-title { font-size: 13px; font-weight: 500; color: #aaa; margin-bottom: 12px; }
-.row { display: flex; gap: 8px; margin-bottom: 8px; align-items: center; }
-input[type=text], input[type=email], input[type=password] { flex: 1; font-size: 13px; padding: 6px 10px; border: 1px solid #2e2e2e; border-radius: 6px; background: #222; color: #e5e5e5; outline: none; }
-input[type=text]:focus, input[type=email]:focus, input[type=password]:focus { border-color: #555; }
-input[type=file] { flex: 1; font-size: 13px; color: #aaa; }
-button { font-size: 13px; padding: 6px 14px; border: 1px solid #333; border-radius: 6px; background: #222; color: #e5e5e5; cursor: pointer; white-space: nowrap; }
-button:hover { background: #2e2e2e; }
-.method { font-size: 11px; font-weight: 600; padding: 2px 7px; border-radius: 5px; margin-right: 6px; }
-.GET { background: #085041; color: #9FE1CB; }
-.POST { background: #0C447C; color: #B5D4F4; }
-.DELETE { background: #791F1F; color: #F7C1C1; }
-.PATCH { background: #633806; color: #FAC775; }
-.response { margin-top: 12px; background: #161616; border-radius: 6px; padding: 10px; font-size: 12px; font-family: monospace; color: #888; white-space: pre-wrap; word-break: break-all; max-height: 200px; overflow-y: auto; border: 1px solid #2a2a2a; }
-.status-ok { color: #5DCAA5; font-weight: 600; }
-.status-err { color: #F09595; font-weight: 600; }
-label { font-size: 12px; color: #666; min-width: 80px; }
-.base-row { display: flex; gap: 8px; align-items: center; margin-bottom: 1.5rem; background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 10px; padding: 0.75rem 1.25rem; }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0f0f11;
+    --surface: #18181b;
+    --surface2: #1e1e22;
+    --border: #2a2a2f;
+    --border2: #3a3a42;
+    --text: #e8e8ec;
+    --muted: #6b6b78;
+    --accent: #7c6af7;
+    --accent-dim: #1e1a3d;
+    --success: #22c55e;
+    --success-dim: #0d2818;
+    --danger: #ef4444;
+    --danger-dim: #2a0d0d;
+    --warn: #f59e0b;
+    --warn-dim: #2a1d05;
+    --mono: 'Fira Mono', 'Consolas', monospace;
+    --sans: 'Inter', system-ui, sans-serif;
+    --radius: 8px;
+  }
+
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  header {
+    padding: 20px 28px 18px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    z-index: 100;
+  }
+
+  .logo {
+    width: 32px; height: 32px;
+    background: var(--accent);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  header h1 {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+
+  header p {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 1px;
+  }
+
+  .base-url-bar {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .base-url-bar label {
+    font-size: 11px;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  .base-url-bar input {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 6px 10px;
+    border-radius: var(--radius);
+    width: 260px;
+    outline: none;
+  }
+
+  .base-url-bar input:focus { border-color: var(--accent); }
+
+  .layout {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+    height: calc(100vh - 65px);
+  }
+
+  aside {
+    width: 260px;
+    flex-shrink: 0;
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    padding: 16px 0;
+  }
+
+  .group-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    text-transform: uppercase;
+    padding: 10px 18px 6px;
+  }
+
+  .endpoint-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 8px 18px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    border-left: 2px solid transparent;
+    transition: background 0.12s;
+  }
+
+  .endpoint-btn:hover { background: var(--surface); }
+  .endpoint-btn.active {
+    background: var(--accent-dim);
+    border-left-color: var(--accent);
+  }
+
+  .method-badge {
+    font-family: var(--mono);
+    font-size: 9px;
+    font-weight: 700;
+    padding: 2px 5px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    width: 36px;
+    text-align: center;
+  }
+
+  .m-get  { background: #0d2818; color: #4ade80; }
+  .m-post { background: #1a1a05; color: #facc15; }
+  .m-put  { background: #1a1205; color: #fb923c; }
+  .m-del  { background: #2a0d0d; color: #f87171; }
+  .m-patch{ background: #1a1205; color: #fb923c; }
+
+  .endpoint-btn span {
+    font-size: 12px;
+    color: var(--text);
+    font-family: var(--mono);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  main {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 28px;
+    gap: 20px;
+    max-width: 900px;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .panel-header {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .panel-header h2 {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+
+  .tag {
+    font-size: 11px;
+    color: var(--muted);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-family: var(--mono);
+  }
+
+  .url-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 18px;
+  }
+
+  .url-row .method-badge {
+    font-size: 11px;
+    padding: 4px 10px;
+    width: auto;
+  }
+
+  .url-row input {
+    flex: 1;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 13px;
+    padding: 8px 12px;
+    border-radius: var(--radius);
+    outline: none;
+  }
+
+  .url-row input:focus { border-color: var(--accent); }
+
+  .send-btn {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius);
+    padding: 8px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: opacity 0.12s;
+  }
+
+  .send-btn:hover { opacity: 0.85; }
+  .send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .fields {
+    padding: 4px 18px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .field-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .field-row label {
+    font-size: 11px;
+    color: var(--muted);
+    font-family: var(--mono);
+    min-width: 120px;
+    padding-top: 9px;
+  }
+
+  .field-row label span {
+    color: var(--danger);
+  }
+
+  .field-row input, .field-row textarea, .field-row select {
+    flex: 1;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 8px 10px;
+    border-radius: var(--radius);
+    outline: none;
+    resize: vertical;
+  }
+
+  .field-row input:focus, .field-row textarea:focus { border-color: var(--accent); }
+
+  .field-row input[type="file"] {
+    padding: 6px 10px;
+    cursor: pointer;
+    color: var(--muted);
+  }
+
+  .section-divider {
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: 4px 18px 2px;
+    border-top: 1px solid var(--border);
+    margin-top: 4px;
+  }
+
+  .response-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .response-header {
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .response-header h3 {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .status-badge {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 20px;
+  }
+
+  .status-ok   { background: var(--success-dim); color: var(--success); }
+  .status-err  { background: var(--danger-dim); color: var(--danger); }
+  .status-warn { background: var(--warn-dim); color: var(--warn); }
+
+  .time-label {
+    font-size: 11px;
+    color: var(--muted);
+    font-family: var(--mono);
+    margin-left: auto;
+  }
+
+  .response-body {
+    padding: 18px;
+    font-family: var(--mono);
+    font-size: 12px;
+    line-height: 1.7;
+    color: #b8b8cc;
+    max-height: 420px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+
+  .empty-state {
+    padding: 40px 18px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  .welcome {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    gap: 12px;
+    color: var(--muted);
+    text-align: center;
+    padding: 60px 20px;
+  }
+
+  .welcome .icon { font-size: 40px; margin-bottom: 4px; }
+  .welcome h2 { font-size: 18px; font-weight: 600; color: var(--text); }
+  .welcome p { font-size: 14px; max-width: 360px; line-height: 1.6; }
+
+  .json-key    { color: #79b8ff; }
+  .json-str    { color: #9ecbff; }
+  .json-num    { color: #f8c555; }
+  .json-bool   { color: #f97583; }
+  .json-null   { color: var(--muted); }
+
+  @media (max-width: 700px) {
+    aside { width: 200px; }
+    .base-url-bar input { width: 160px; }
+  }
+
+  .cors-banner {
+    background: #1c1508;
+    border-bottom: 1px solid #4a3000;
+    padding: 10px 28px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 12px;
+    line-height: 1.6;
+    color: #d4a44c;
+  }
+  .cors-banner .cb-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .cors-banner strong { color: #f0c060; font-weight: 600; }
+  .cors-banner code { background: #2a1e08; border: 1px solid #4a3000; padding: 1px 6px; border-radius: 4px; font-family: var(--mono); font-size: 11px; color: #f0c060; }
+  .cors-banner .cb-close { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 16px; margin-left: auto; flex-shrink: 0; padding: 0 0 0 8px; line-height: 1; }
+  .cors-banner .cb-close:hover { color: var(--text); }
+  .cors-steps { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 6px; }
+  .cors-step { display: flex; align-items: center; gap: 6px; }
+  .cors-step .num { width: 18px; height: 18px; border-radius: 50%; background: #4a3000; color: #f0c060; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 </style>
 </head>
 <body>
 
-<h1>API Tester</h1>
-
-<div class="base-row">
-  <label>Base URL</label>
-  <input type="text" id="baseUrl" value="http://localhost:3000" style="flex:1" />
-</div>
-
-<div class="group-label">Users</div>
-
-<div class="section">
-  <div class="section-title"><span class="method POST">POST</span> criar usuário</div>
-  <div class="row"><label>name</label><input type="text" id="u-name" placeholder="Nome" /></div>
-  <div class="row"><label>email</label><input type="email" id="u-email" placeholder="email@exemplo.com" /></div>
-  <div class="row"><label>pass</label><input type="password" id="u-pass" placeholder="senha" /></div>
-  <div class="row"><button onclick="createUser()" style="margin-left:88px">Enviar</button></div>
-  <div class="response" id="u-create-res">—</div>
-</div>
-
-<div class="group-label">Applications</div>
-
-<div class="section">
-  <div class="section-title"><span class="method GET">GET</span> listar applications</div>
-  <div class="row">
-    <label>ownerID</label>
-    <input type="text" id="list-owner" placeholder="opcional" />
-    <button onclick="listApps()">Enviar</button>
+<div class="cors-banner" id="corsBanner">
+  <span class="cb-icon">⚠</span>
+  <div>
+    <strong>Erro de CORS ao abrir como arquivo local.</strong>
+    O navegador bloqueia requisições de <code>file://</code> para <code>localhost</code>. Sirva este arquivo via servidor HTTP:
+    <div class="cors-steps">
+      <div class="cors-step"><div class="num">1</div><span>Terminal na pasta do arquivo</span></div>
+      <div class="cors-step"><div class="num">2</div><span>Execute: <code>npx serve .</code> ou <code>python -m http.server 8080</code></span></div>
+      <div class="cors-step"><div class="num">3</div><span>Acesse: <code>http://localhost:8080/tester.html</code></span></div>
+    </div>
   </div>
-  <div class="response" id="list-res">—</div>
+  <button class="cb-close" onclick="document.getElementById('corsBanner').style.display='none'" title="Fechar">&#x2715;</button>
 </div>
 
-<div class="section">
-  <div class="section-title"><span class="method GET">GET</span> buscar por id</div>
-  <div class="row">
-    <label>ID</label>
-    <input type="text" id="get-id" placeholder="application id" />
-    <button onclick="getApp()">Enviar</button>
+<header>
+  <div class="logo">⚡</div>
+  <div>
+    <h1>API Tester</h1>
+    <p>Applications · Licenses · Users</p>
   </div>
-  <div class="response" id="get-res">—</div>
-</div>
-
-<div class="section">
-  <div class="section-title"><span class="method POST">POST</span> criar application</div>
-  <div class="row"><label>name</label><input type="text" id="create-name" placeholder="Nome da app" /></div>
-  <div class="row"><label>ownerID</label><input type="text" id="create-owner" placeholder='["id1","id2"]' /></div>
-  <div class="row"><label>config</label><input type="text" id="create-config" placeholder='{"tag":"APP","types":["basic"],"default_duration":30}' /></div>
-  <div class="row"><label>imagem</label><input type="file" id="create-image" accept="image/*" /></div>
-  <div class="row"><button onclick="createApp()" style="margin-left:88px">Enviar</button></div>
-  <div class="response" id="create-res">—</div>
-</div>
-
-<div class="section">
-  <div class="section-title"><span class="method PATCH">PATCH</span> atualizar config</div>
-  <div class="row"><label>ID</label><input type="text" id="patch-id" placeholder="application id" /></div>
-  <div class="row"><label>tag</label><input type="text" id="patch-tag" placeholder="NEWTAG" /></div>
-  <div class="row"><label>duration</label><input type="text" id="patch-duration" placeholder="30" /></div>
-  <div class="row"><button onclick="patchApp()" style="margin-left:88px">Enviar</button></div>
-  <div class="response" id="patch-res">—</div>
-</div>
-
-<div class="section">
-  <div class="section-title"><span class="method DELETE">DELETE</span> deletar application</div>
-  <div class="row">
-    <label>ID</label>
-    <input type="text" id="del-id" placeholder="application id" />
-    <button onclick="deleteApp()">Enviar</button>
+  <div class="base-url-bar">
+    <label>Base URL</label>
+    <input type="text" id="baseUrl" value="http://localhost:3000" placeholder="http://localhost:3000">
   </div>
-  <div class="response" id="del-res">—</div>
+</header>
+
+<div class="layout">
+  <aside id="sidebar"></aside>
+  <main id="main">
+    <div class="welcome">
+      <div class="icon">🔌</div>
+      <h2>Selecione um endpoint</h2>
+      <p>Escolha uma rota na barra lateral para começar a testar sua API.</p>
+    </div>
+  </main>
 </div>
 
 <script>
-const base = () => document.getElementById('baseUrl').value.replace(/\/$/, '');
+const endpoints = [
+  { group: 'Applications', method: 'GET',    id: 'app-list',    label: '/applications',   path: '/applications',               desc: 'Listar aplicações',
+    params: [{name:'ownerId', in:'query', label:'ownerId', required:false, default:'usr_owner_001'}] },
 
-function show(id, status, data) {
-  const el = document.getElementById(id);
-  const ok = status >= 200 && status < 300;
-  el.innerHTML = `<span class="${ok ? 'status-ok' : 'status-err'}">${status}</span>\n${JSON.stringify(data, null, 2)}`;
+  { group: 'Applications', method: 'GET',    id: 'app-by-id',   label: '/applications/:id', path: '/applications/{id}',          desc: 'Buscar aplicação por ID',
+    params: [{name:'id', in:'path', label:'id', required:true, default:'app_abc123'}] },
+
+  { group: 'Applications', method: 'POST',   id: 'app-create',  label: '/applications',   path: '/applications',               desc: 'Criar aplicação',
+    params: [
+      {name:'name',     in:'body', label:'name',         required:true,  default:'Minha Aplicação'},
+      {name:'ownerID',  in:'body', label:'ownerID',      required:true,  default:'["usr_owner_001"]'},
+      {name:'config',   in:'body', label:'config (JSON)', required:true, isJson:true, default:'{"tag":"minha-app","types":["default"],"default_duration":30,"theme":"dark","lang":"pt-BR"}'},
+      {name:'image',    in:'file', label:'image',        required:true}
+    ]},
+
+  { group: 'Applications', method: 'PATCH',    id: 'app-update',  label: '/applications/:id/config', path: '/applications/{id}/config', desc: 'Atualizar config',
+    params: [
+      {name:'id',               in:'path', label:'id',               required:true,  default:'app_abc123'},
+      {name:'tag',              in:'body', label:'tag',              required:true, default:'minha-app'},
+      {name:'default_duration', in:'body', label:'default_duration', required:true, default:'30'}
+    ]},
+
+  { group: 'Applications', method: 'DELETE', id: 'app-delete',  label: '/applications/:id', path: '/applications/{id}',          desc: 'Deletar aplicação',
+    params: [{name:'id', in:'path', label:'id', required:true, default:'app_abc123'}] },
+
+  { group: 'Licenses', method: 'GET',    id: 'lic-list',    label: '/licenses',       path: '/licenses',           desc: 'Listar licenças',
+    params: [{name:'appId', in:'query', label:'appId (query)', required:true, default:'app_abc123'}] },
+
+  { group: 'Licenses', method: 'POST',   id: 'lic-create',  label: '/licenses',       path: '/licenses',           desc: 'Criar licença',
+    params: [{name:'body', in:'bodyRaw', label:'body (JSON)', required:true,
+      placeholder:'{\n  "appId": "app_abc123",\n  "durationDays": 30\n}'}] },
+
+  { group: 'Licenses', method: 'PUT',    id: 'lic-edit',    label: '/licenses/:id',   path: '/licenses/{id}',      desc: 'Editar licença',
+    params: [
+      {name:'id',   in:'path',    label:'id',         required:true,
+        default:'lic_xyz789'},
+      {name:'body', in:'bodyRaw', label:'body (JSON)', required:true,
+        placeholder:'{\n  "expiresAt": "2027-06-30T23:59:59Z",\n  "active": true\n}'}
+    ]},
+
+  { group: 'Licenses', method: 'DELETE', id: 'lic-delete',  label: '/licenses/:id',   path: '/licenses/{id}',      desc: 'Deletar licença',
+    params: [{name:'id', in:'path', label:'id', required:true, default:'lic_xyz789'}] },
+
+  { group: 'Licenses', method: 'POST',   id: 'lic-validate',label: '/licenses/validate',path:'/licenses/validate',  desc: 'Validar licença',
+    params: [{name:'key', in:'body', label:'key', required:true, default:'LIC-XXXX-YYYY-ZZZZ-0001'}] },
+
+  { group: 'Users', method: 'GET',    id: 'user-list',   label: '/users',          path: '/users',              desc: 'Listar usuários',
+    params: [] },
+
+  { group: 'Users', method: 'GET',    id: 'user-by-id',  label: '/users/:id',      path: '/users/{id}',         desc: 'Buscar usuário por ID',
+    params: [{name:'id', in:'path', label:'id', required:true, default:'usr_owner_001'}] },
+
+  { group: 'Users', method: 'POST',   id: 'user-create', label: '/users',          path: '/users',              desc: 'Criar usuário',
+    params: [{name:'body', in:'bodyRaw', label:'body (JSON)', required:true,
+      placeholder:'{\n  "name": "João Silva",\n  "email": "joao.silva@email.com",\n  "pass": "Senha@123"\n}'}] },
+
+  { group: 'Users', method: 'PUT',    id: 'user-edit',   label: '/users/:id',      path: '/users/{id}',         desc: 'Editar usuário',
+    params: [
+      {name:'id',   in:'path',    label:'id',          required:true,  default:'usr_owner_001'},
+      {name:'body', in:'bodyRaw', label:'body (JSON)', required:true,
+        placeholder:'{\n  "name": "João Santos",\n  "email": "joao.santos@email.com"\n}'}
+    ]},
+
+  { group: 'Users', method: 'DELETE', id: 'user-delete', label: '/users/:id',      path: '/users/{id}',         desc: 'Deletar usuário',
+    params: [{name:'id', in:'path', label:'id', required:true, default:'usr_owner_001'}] },
+
+  { group: 'Users', method: 'POST',   id: 'user-login',  label: '/users/login',    path: '/users/login',        desc: 'Login de usuário',
+    params: [
+      {name:'email', in:'body', label:'email', required:true, default:'joao.silva@email.com'},
+      {name:'pass',  in:'body', label:'pass',  required:true, default:'Senha@123'}
+    ]},
+];
+
+const sidebar = document.getElementById('sidebar');
+const mainEl  = document.getElementById('main');
+let activeId  = null;
+
+function methodClass(m) {
+  return { GET:'m-get', POST:'m-post', PUT:'m-put', DELETE:'m-del', PATCH:'m-patch' }[m] || 'm-get';
 }
 
-async function createUser() {
-  const body = { name: document.getElementById('u-name').value, email: document.getElementById('u-email').value, pass: document.getElementById('u-pass').value };
-  try {
-    const r = await fetch(`${base()}/users`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-    show('u-create-res', r.status, await r.json());
-  } catch(e) { document.getElementById('u-create-res').textContent = e.message; }
+function buildSidebar() {
+  const groups = [...new Set(endpoints.map(e => e.group))];
+  groups.forEach(g => {
+    const label = document.createElement('div');
+    label.className = 'group-label';
+    label.textContent = g;
+    sidebar.appendChild(label);
+    endpoints.filter(e => e.group === g).forEach(ep => {
+      const btn = document.createElement('button');
+      btn.className = 'endpoint-btn';
+      btn.dataset.id = ep.id;
+      btn.innerHTML = `<span class="method-badge ${methodClass(ep.method)}">${ep.method}</span><span>${ep.label}</span>`;
+      btn.onclick = () => selectEndpoint(ep);
+      sidebar.appendChild(btn);
+    });
+  });
 }
 
-async function listApps() {
-  const owner = document.getElementById('list-owner').value;
-  const url = base() + '/applications' + (owner ? `?ownerId=${owner}` : '');
-  try {
-    const r = await fetch(url);
-    show('list-res', r.status, await r.json());
-  } catch(e) { document.getElementById('list-res').textContent = e.message; }
+function buildUrl(ep, values) {
+  const base = document.getElementById('baseUrl').value.replace(/\/$/, '');
+  let path = ep.path;
+  ep.params.filter(p => p.in === 'path').forEach(p => {
+    path = path.replace(`{${p.name}}`, encodeURIComponent(values[p.name] || ''));
+  });
+  const qp = ep.params.filter(p => p.in === 'query');
+  const qs = qp.map(p => values[p.name] ? `${p.name}=${encodeURIComponent(values[p.name])}` : '').filter(Boolean).join('&');
+  return base + path + (qs ? '?' + qs : '');
 }
 
-async function getApp() {
-  const id = document.getElementById('get-id').value;
-  try {
-    const r = await fetch(`${base()}/applications/${id}`);
-    show('get-res', r.status, await r.json());
-  } catch(e) { document.getElementById('get-res').textContent = e.message; }
-}
+function selectEndpoint(ep) {
+  activeId = ep.id;
+  document.querySelectorAll('.endpoint-btn').forEach(b => b.classList.toggle('active', b.dataset.id === ep.id));
 
-async function createApp() {
-  const fd = new FormData();
-  fd.append('name', document.getElementById('create-name').value);
-  fd.append('ownerID', document.getElementById('create-owner').value);
-  fd.append('config', document.getElementById('create-config').value);
-  const file = document.getElementById('create-image').files[0];
-  if (file) fd.append('image', file);
-  try {
-    const r = await fetch(`${base()}/applications`, { method: 'POST', body: fd });
-    show('create-res', r.status, await r.json());
-  } catch(e) { document.getElementById('create-res').textContent = e.message; }
-}
+  const pathParams  = ep.params.filter(p => p.in === 'path');
+  const queryParams = ep.params.filter(p => p.in === 'query');
+  const bodyParams  = ep.params.filter(p => p.in === 'body');
+  const rawBody     = ep.params.find(p => p.in === 'bodyRaw');
+  const fileParam   = ep.params.find(p => p.in === 'file');
+  const jsonParams  = ep.params.filter(p => p.isJson);
 
-async function patchApp() {
-  const id = document.getElementById('patch-id').value;
-  const body = { tag: document.getElementById('patch-tag').value, default_duration: Number(document.getElementById('patch-duration').value) };
-  try {
-    const r = await fetch(`${base()}/applications/${id}/config`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-    show('patch-res', r.status, await r.json());
-  } catch(e) { document.getElementById('patch-res').textContent = e.message; }
-}
+  const badgeCls = methodClass(ep.method);
 
-async function deleteApp() {
-  const id = document.getElementById('del-id').value;
-  try {
-    const r = await fetch(`${base()}/applications/${id}`, { method: 'DELETE' });
-    if (r.status === 204) {
-      document.getElementById('del-res').innerHTML = '<span class="status-ok">204 — deletado</span>';
-    } else {
-      show('del-res', r.status, await r.json());
+  let fieldsHtml = '';
+
+  if (pathParams.length) {
+    fieldsHtml += `<div class="section-divider">Path params</div><div class="fields">`;
+    pathParams.forEach(p => {
+      fieldsHtml += `<div class="field-row"><label>${p.label}${p.required ? ' <span>*</span>' : ''}</label><input data-param="${p.name}" data-in="path" type="text" value="${p.default || ''}" placeholder="${p.default || 'valor'}"></div>`;
+    });
+    fieldsHtml += `</div>`;
+  }
+
+  if (queryParams.length) {
+    fieldsHtml += `<div class="section-divider">Query params</div><div class="fields">`;
+    queryParams.forEach(p => {
+      fieldsHtml += `<div class="field-row"><label>${p.label}</label><input data-param="${p.name}" data-in="query" type="text" value="${p.default || ''}" placeholder="${p.default || 'valor'}"></div>`;
+    });
+    fieldsHtml += `</div>`;
+  }
+
+  if (bodyParams.length || fileParam) {
+    fieldsHtml += `<div class="section-divider">Body</div><div class="fields">`;
+    bodyParams.forEach(p => {
+      if (p.isJson) {
+        const defVal = p.default || '{"key":"value"}';
+        fieldsHtml += `<div class="field-row"><label>${p.label}</label><textarea data-param="${p.name}" data-in="body" rows="3" placeholder='${defVal}'>${defVal}</textarea></div>`;
+      } else {
+        fieldsHtml += `<div class="field-row"><label>${p.label}${p.required ? ' <span>*</span>' : ''}</label><input data-param="${p.name}" data-in="body" type="text" value="${p.default || ''}" placeholder="${p.default || 'valor'}"></div>`;
+      }
+    });
+    if (fileParam) {
+      fieldsHtml += `<div class="field-row"><label>${fileParam.label}</label><input data-param="${fileParam.name}" data-in="file" type="file"></div>`;
     }
-  } catch(e) { document.getElementById('del-res').textContent = e.message; }
+    fieldsHtml += `</div>`;
+  }
+
+  if (rawBody) {
+    const defVal = rawBody.placeholder || '{}';
+    fieldsHtml += `<div class="section-divider">Body (JSON)</div><div class="fields"><div class="field-row"><label>${rawBody.label}${rawBody.required ? ' <span>*</span>' : ''}</label><textarea data-param="${rawBody.name}" data-in="bodyRaw" rows="6" placeholder='${defVal}' style="font-size:11px;line-height:1.6">${defVal}</textarea></div></div>`;
+  }
+
+  mainEl.innerHTML = `
+    <div class="panel">
+      <div class="panel-header">
+        <span class="method-badge ${badgeCls}" style="font-size:11px;padding:3px 10px;width:auto">${ep.method}</span>
+        <h2>${ep.desc}</h2>
+        <span class="tag">${ep.path}</span>
+      </div>
+      <div class="url-row">
+        <input id="urlInput" type="text" value="" readonly style="color:var(--muted)">
+        <button class="send-btn" id="sendBtn">Enviar ↗</button>
+      </div>
+      ${fieldsHtml}
+    </div>
+    <div class="response-panel" id="responsePanel">
+      <div class="response-header"><h3>Resposta</h3></div>
+      <div class="empty-state">Clique em Enviar para ver a resposta.</div>
+    </div>
+  `;
+
+  function updateUrl() {
+    const vals = {};
+    mainEl.querySelectorAll('[data-param]').forEach(el => {
+      if (el.dataset.in !== 'file' && el.dataset.in !== 'body' && el.dataset.in !== 'bodyRaw') {
+        vals[el.dataset.param] = el.value;
+      }
+    });
+    document.getElementById('urlInput').value = buildUrl(ep, vals);
+  }
+
+  mainEl.querySelectorAll('[data-param]').forEach(el => {
+    if (el.dataset.in !== 'file') el.addEventListener('input', updateUrl);
+  });
+  updateUrl();
+
+  document.getElementById('sendBtn').onclick = () => sendRequest(ep);
 }
+
+async function sendRequest(ep) {
+  const btn = document.getElementById('sendBtn');
+  btn.disabled = true;
+  btn.textContent = 'Enviando…';
+
+  const vals = {};
+  mainEl.querySelectorAll('[data-param]').forEach(el => { vals[el.dataset.param] = el; });
+
+  const url = document.getElementById('urlInput').value;
+  const method = ep.method;
+  let headers = {};
+  let body = null;
+
+  const hasFile  = ep.params.some(p => p.in === 'file');
+  const rawBody  = ep.params.find(p => p.in === 'bodyRaw');
+  const bodyPs   = ep.params.filter(p => p.in === 'body');
+
+  if (hasFile) {
+    const fd = new FormData();
+    ep.params.filter(p => p.in === 'body').forEach(p => {
+      const el = vals[p.name];
+      if (el && el.value) {
+        if (p.isJson) { try { fd.append(p.name, el.value); } catch(e){} }
+        else fd.append(p.name, el.value);
+      }
+    });
+    ep.params.filter(p => p.in === 'file').forEach(p => {
+      const el = vals[p.name];
+      if (el && el.files[0]) fd.append(p.name, el.files[0]);
+    });
+    body = fd;
+  } else if (rawBody) {
+    headers['Content-Type'] = 'application/json';
+    try { JSON.parse(vals[rawBody.name].value); body = vals[rawBody.name].value; }
+    catch(e) { showResponse(null, 0, 0, 'JSON inválido no body: ' + e.message); btn.disabled=false; btn.textContent='Enviar ↗'; return; }
+  } else if (bodyPs.length) {
+    headers['Content-Type'] = 'application/json';
+    const obj = {};
+    bodyPs.forEach(p => { if (vals[p.name] && vals[p.name].value) {
+      if (p.isJson) { try { obj[p.name] = JSON.parse(vals[p.name].value); } catch(e){ obj[p.name]=vals[p.name].value; } }
+      else obj[p.name] = vals[p.name].value;
+    }});
+    body = JSON.stringify(obj);
+  }
+
+  const start = Date.now();
+  try {
+    const opts = { method, headers };
+    if (body && method !== 'GET') opts.body = body;
+    const res = await fetch(url, opts);
+    const elapsed = Date.now() - start;
+    const raw = await res.text();
+    let display = raw;
+    try { display = JSON.stringify(JSON.parse(raw), null, 2); } catch(e) {}
+    showResponse(res.status, res.status, elapsed, display);
+  } catch(e) {
+    showResponse(null, 0, Date.now()-start, 'Erro de rede: ' + e.message);
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'Enviar ↗';
+}
+
+function showResponse(httpStatus, code, ms, text) {
+  const panel = document.getElementById('responsePanel');
+  let cls = 'status-ok', label = httpStatus;
+  if (!httpStatus || httpStatus >= 500) { cls = 'status-err'; label = httpStatus || 'Erro'; }
+  else if (httpStatus >= 400) { cls = 'status-warn'; }
+  else if (httpStatus === 0) { cls = 'status-err'; label = 'Falha'; }
+
+  panel.innerHTML = `
+    <div class="response-header">
+      <h3>Resposta</h3>
+      ${httpStatus ? `<span class="status-badge ${cls}">${label}</span>` : `<span class="status-badge status-err">Falha</span>`}
+      <span class="time-label">${ms}ms</span>
+    </div>
+    <pre class="response-body">${syntaxHighlight(text)}</pre>
+  `;
+}
+
+function syntaxHighlight(str) {
+  const escaped = str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  return escaped.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, match => {
+    let cls = 'json-num';
+    if (/^"/.test(match)) cls = /:$/.test(match) ? 'json-key' : 'json-str';
+    else if (/true|false/.test(match)) cls = 'json-bool';
+    else if (/null/.test(match)) cls = 'json-null';
+    return `<span class="${cls}">${match}</span>`;
+  });
+}
+
+buildSidebar();
 </script>
 </body>
 </html>
