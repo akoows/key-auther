@@ -37,12 +37,14 @@
   }
 
   model Licenses {
-    id         String      @id @default(auto()) @map("_id") @db.ObjectId
-    duration    DateTime    
+    id          String      @id @default(auto()) @map("_id") @db.ObjectId
+    key         String      @unique
+    duration    DateTime
     activatedAt DateTime?
     status      Boolean
     createdAt   DateTime    @default(now())
 
     licensesOwnerID String[] @db.ObjectId
-    licensesOwners  Application[]   @relation("LicenseOwners", fields: [licensesOwnerID], references: [id])
+    licensesOwners  Application[] @relation("LicenseOwners", fields: [licensesOwnerID], references: [id])
+
     }
