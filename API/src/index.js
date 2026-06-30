@@ -10,6 +10,6 @@ const router = express.Router();
 // Instanciando Rotas
 router.use("/users", userRouter);
 router.use("/applications", appRouter);
-
+router.use("/licenses", licenseRouter);
 // Exportando router
 export { router };
